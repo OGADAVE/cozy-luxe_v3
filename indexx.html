@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <title>COZY-LUXE — Beddings for Royals</title>
+
+  <meta
+    name="description"
+    content="Shop COZY-LUXE for luxury beddings, fragrances, pillows, duvets, nightwear, blankets and premium home essentials delivered nationwide across Nigeria."
+  >
+
+  <meta
+    name="keywords"
+    content="COZY-LUXE, luxury beddings, bedsheets, duvets, pillows, blankets, nightwear, home fragrances, scented candles, Nigeria"
+  >
+
+  <meta name="author" content="COZY-LUXE Enterprises">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#2B2118">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://cozy-luxe.com/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="COZY-LUXE — Beddings for Royals">
+  <meta
+    property="og:description"
+    content="Hotel-quality beddings, fragrances and home essentials crafted for people who appreciate refined living."
+  >
+  <meta property="og:url" content="https://cozy-luxe.com/">
+  <meta property="og:site_name" content="COZY-LUXE">
+  <meta property="og:image" content="https://cozy-luxe.com/images/logo2.png">
+  <meta property="og:image:alt" content="COZY-LUXE">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="COZY-LUXE — Beddings for Royals">
+  <meta
+    name="twitter:description"
+    content="Luxury beddings, fragrances and home essentials for a refined lifestyle."
+  >
+  <meta name="twitter:image" content="https://cozy-luxe.com/images/logo2.png">
+
+  <!-- Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lato:wght@300;400;700;900&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  >
+
+  <style>
+    .hero {
+      position: relative;
+      height: 78vh;
+      min-height: 520px;
+      display: flex;
+    }
+
+    .hero-photo {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          100deg,
+          rgba(35,27,19,0.94) 0%,
+          rgba(35,27,19,0.55) 42%,
+          rgba(35,27,19,0.05) 62%
+        ),
+        url('images/herobg2.png') center/cover no-repeat;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 520px;
+      margin: auto 0;
+      padding-left: 5vw;
+      color: var(--white);
+    }
+
+    .hero .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-soft);
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .hero h1 {
+      font-size: clamp(34px, 4.6vw, 54px);
+      line-height: 1.18;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 .line2 {
+      color: var(--gold-soft);
+      display: block;
+    }
+
+    .hero p {
+      font-size: 15.5px;
+      color: rgba(255,255,255,0.75);
+      max-width: 400px;
+      margin-bottom: 34px;
+      font-weight: 300;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .testimonial-banner {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr 1fr;
+      background: var(--espresso);
+      align-items: stretch;
+    }
+
+    .testimonial-banner .side {
+      min-height: 340px;
+    }
+
+    .testimonial-banner .center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 30px;
+      color: var(--white);
+    }
+
+    .testimonial-banner .eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-soft);
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .testimonial-banner .quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 19px;
+      line-height: 1.6;
+      max-width: 440px;
+      margin-bottom: 20px;
+    }
+
+    .testimonial-banner .name {
+      font-size: 11.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold-soft);
+      margin-bottom: 20px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+    }
+
+    .dots span.active {
+      background: var(--gold);
+    }
+
+    .insta-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .insta-grid .sw {
+      aspect-ratio: 1 / 1;
+    }
+
+    .ceo-video-section {
+      background: var(--white);
+    }
+
+    .ceo-video-wrap {
+      position: relative;
+      max-width: 360px;
+      margin: 0 auto;
+      aspect-ratio: 9 / 16;
+      background:
+        linear-gradient(
+          135deg,
+          #2B2118,
+          #3a2c1c 55%,
+          #5b4527
+        );
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(43,33,24,0.18);
+    }
+
+    .ceo-video-wrap iframe {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border: 0;
+    }
+
+    .ceo-video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: rgba(255,255,255,0.75);
+      padding: 40px;
+      gap: 16px;
+    }
+
+    .ceo-video-placeholder .play-badge {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 1.5px solid var(--gold-soft);
+      color: var(--gold-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .ceo-video-placeholder p {
+      font-size: 12.5px;
+      max-width: 320px;
+      line-height: 1.6;
+    }
+
+    .ceo-video-placeholder code {
+      color: var(--gold-soft);
+    }
+
+    .whatsapp-icon {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--espresso);
+  text-decoration: none;
+  font-size: 22px;
+  transition: all 0.3s ease;
+}
+
+.whatsapp-icon:hover {
+  color: var(--gold-deep);
+  transform: translateY(-2px);
+}
+
+    /* Accessible / interactive elements */
+
+    .icon-btn {
+      cursor: pointer;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      color: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    button.icon-btn {
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .search-button {
+      cursor: pointer;
+    }
+
+    .socials {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .social-icon {
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 50%;
+      color: #fff;
+      text-decoration: none;
+      font-size: 17px;
+      transition: all 0.3s ease;
+    }
+
+    .social-icon:hover,
+    .social-icon:focus-visible {
+      background: #fff;
+      color: #111;
+      border-color: #fff;
+      transform: translateY(-3px);
+    }
+
+    .social-icon:focus-visible,
+    .icon-btn:focus-visible,
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible {
+      outline: 2px solid var(--gold-soft);
+      outline-offset: 3px;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .newsletter-form input {
+      min-width: 240px;
+    }
+
+    .newsletter-status {
+      width: 100%;
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .newsletter-status.success {
+      color: #6fa36f;
+    }
+
+    .newsletter-status.error {
+      color: #c96b6b;
+    }
+
+    .search-message {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      max-width: 340px;
+      padding: 14px 18px;
+      background: #2B2118;
+      color: #fff;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+      font-size: 13px;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .search-message.show {
+      display: block;
+    }
+
+    .loading-message,
+    .error-message {
+      text-align: center;
+      padding: 30px 20px;
+      grid-column: 1 / -1;
+    }
+
+    .error-message {
+      color: #9b4a4a;
+    }
+
+    @media(max-width:1000px) {
+      .testimonial-banner {
+        grid-template-columns: 1fr;
+      }
+
+      .testimonial-banner .side {
+        display: none;
+      }
+
+      .insta-grid {
+        grid-template-columns: repeat(4,1fr);
+      }
+    }
+
+    @media(max-width:600px) {
+      .hero {
+        min-height: 580px;
+      }
+
+      .hero-content {
+        padding-left: 6vw;
+        padding-right: 6vw;
+      }
+
+      .newsletter-form {
+        width: 100%;
+      }
+
+      .newsletter-form input {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .newsletter-form button {
+        width: 100%;
+      }
+    }
+
+    @media(prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <noscript>
+    <div style="padding:15px;text-align:center;background:#2B2118;color:#fff;">
+      COZY-LUXE works best with JavaScript enabled.
+    </div>
+  </noscript>
+
+  <!-- Search notification -->
+  <div
+    id="searchMessage"
+    class="search-message"
+    role="status"
+    aria-live="polite"
+  ></div>
+
+  <!-- Utility Bar -->
+  <div class="utility-bar">
+    <span>Hotel-Quality Comfort, Real-Person Pricing</span>
+
+    <div class="right">
+      <span>Nationwide Delivery</span>
+      <span>Secure Payments</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+
+    <div class="logo-block">
+      <a href="index.html" aria-label="COZY-LUXE Home">
+        <img
+          src="images/logo2.png"
+          alt="COZY-LUXE"
+          class="logo-img"
+          width="180"
+          height="auto"
+        >
+      </a>
+    </div>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      <ul>
+        <li>
+          <a href="index.html" class="active">Home</a>
+        </li>
+
+        <li>
+          <a href="collections.html">Collections</a>
+        </li>
+
+        <li>
+          <a href="about.html">About Us</a>
+        </li>
+
+        <li>
+          <a href="contact.html">Contact</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="nav-right">
+
+      <!-- Search -->
+      <button
+        type="button"
+        class="icon-btn search-button"
+        id="searchButton"
+        aria-label="Search products"
+        title="Search products"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="7"/>
+          <path d="M21 21l-4.3-4.3"/>
+        </svg>
+      </button>
+
+      <!-- Cart -->
+      <a
+        href="cart.html"
+        class="icon-btn"
+        aria-label="Shopping cart"
+        title="Shopping cart"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          aria-hidden="true"
+        >
+          <path d="M3 3h2l2.4 12.4a2 2 0 002 1.6h7.2a2 2 0 002-1.6L20 7H6"/>
+          <circle cx="9" cy="20" r="1"/>
+          <circle cx="18" cy="20" r="1"/>
+        </svg>
+
+        <span
+          class="cart-badge"
+          aria-label="Items in cart"
+        >0</span>
+      </a>
+
+      <!-- WhatsApp -->
+       <a      
+  href="https://wa.me/2347072987483"
+  class="whatsapp-pill whatsapp-cta"
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="Chat with COZY-LUXE on WhatsApp"
+  title="Chat on WhatsApp"
+>
+  <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true">
+    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.29-1.39c1.44.79 3.06 1.2 4.71 1.2h.01c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2z"/>
+  </svg>
+</a>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+  <span></span><span></span><span></span>
+</button>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav">
+  <a href="index.html">Home</a>
+  <a href="collections.html">Collections</a>
+  <a href="about.html">About Us</a>
+  <a href="contact.html">Contact</a>
+</div>
+
+  <!-- HERO -->
+  <section class="hero" style="padding:0;" aria-labelledby="hero-heading">
+
+    <div class="hero-photo" id="heroPhoto" aria-hidden="true"></div>
+
+    <div class="hero-content">
+
+      <div class="eyebrow">
+        ♛ Welcome to COZY-LUXE
+      </div>
+
+      <h1 id="hero-heading">
+        Luxury Comfort.
+        <span class="line2">Timeless Elegance.</span>
+      </h1>
+
+      <p>
+        Hotel-quality beddings, fragrances and home essentials crafted for
+        people who appreciate refined living.
+      </p>
+
+      <div class="hero-buttons">
+
+        <a
+          href="collections.html"
+          class="btn btn-dark"
+        >
+          Shop Collection →
+        </a>
+
+        <a
+          href="https://wa.me/2347072987483"
+          class="btn btn-outline-light whatsapp-cta"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat with COZY-LUXE on WhatsApp"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            width="13"
+            height="13"
+            aria-hidden="true"
+          >
+            <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.29-1.39c1.44.79 3.06 1.2 4.71 1.2h.01c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2z"/>
+          </svg>
+
+          Chat on WhatsApp
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- COLLECTIONS -->
+  <section id="collections" aria-labelledby="collections-heading">
+
+    <div class="center-head">
+      <h2 id="collections-heading">Shop Our Collections</h2>
+      <p>Discover luxury in every detail.</p>
+    </div>
+
+    <div
+      class="collections-grid"
+      id="homeCollectionsGrid"
+      aria-live="polite"
+    ></div>
+
+    <div class="view-all-wrap">
+      <a
+        href="collections.html"
+        class="btn btn-dark"
+      >
+        View All Collections →
+      </a>
+    </div>
+
+  </section>
+
+
+  <!-- BEST SELLERS -->
+  <section
+    class="products-strip"
+    aria-labelledby="best-sellers-heading"
+  >
+
+    <div class="center-head">
+      <h2 id="best-sellers-heading">Best Sellers</h2>
+      <p>Handpicked favorites loved by our customers.</p>
+    </div>
+
+    <div
+      class="products-grid cols-6"
+      id="bestSellersGrid"
+      aria-live="polite"
+    ></div>
+
+  </section>
+
+
+  <!-- WHY CHOOSE US -->
+  <section aria-labelledby="why-heading">
+
+    <div
+      class="center-head"
+      style="margin-bottom:36px;"
+    >
+      <h2 id="why-heading">Why Choose COZY-LUXE?</h2>
+    </div>
+
+    <div class="why-grid">
+
+      <div class="why-card">
+        <div class="why-icon-badge">
+          <svg
+            width="19"
+            height="19"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.3"
+            aria-hidden="true"
+          >
+            <path d="M2 8l4 3 6-8 6 8 4-3-2 12H4z"/>
+          </svg>
+        </div>
+
+        <h4>Premium Quality</h4>
+
+        <p>
+          Luxury fabrics and premium materials for unmatched comfort.
+        </p>
+      </div>
+
+
+      <div class="why-card">
+        <div class="why-icon-badge">
+          <svg
+            width="19"
+            height="19"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.3"
+            aria-hidden="true"
+          >
+            <rect x="1" y="7" width="14" height="9"/>
+            <path d="M15 10h4l3 3v3h-7z"/>
+            <circle cx="6" cy="18.5" r="1.6"/>
+            <circle cx="17.5" cy="18.5" r="1.6"/>
+          </svg>
+        </div>
+
+        <h4>Nationwide Delivery</h4>
+
+        <p>
+          Fast and reliable delivery to all 36 states &amp; FCT.
+        </p>
+      </div>
+
+
+      <div class="why-card">
+        <div class="why-icon-badge">
+          <svg
+            width="19"
+            height="19"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.3"
+            aria-hidden="true"
+          >
+            <path d="M6 3h12l3 5-9 13L3 8z"/>
+          </svg>
+        </div>
+
+        <h4>Luxury Craftsmanship</h4>
+
+        <p>
+          Designed with attention to detail for a refined living experience.
+        </p>
+      </div>
+
+
+      <div class="why-card">
+        <div class="why-icon-badge">
+          <svg
+            width="19"
+            height="19"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.3"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 7v5l3 3"/>
+          </svg>
+        </div>
+
+        <h4>Exceptional Support</h4>
+
+        <p>
+          We're here to help you 24/7 on WhatsApp.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- CEO / FOUNDER VIDEO -->
+  <section
+    class="ceo-video-section"
+    aria-labelledby="founder-heading"
+  >
+
+    <div
+      class="center-head"
+      style="margin-bottom:40px;"
+    >
+
+      <div
+        class="eyebrow"
+        style="
+          font-size:11px;
+          letter-spacing:0.2em;
+          text-transform:uppercase;
+          color:var(--gold-deep);
+          font-weight:700;
+          margin-bottom:12px;
+        "
+      >
+        A Word From Our Founder
+      </div>
+
+      <h2 id="founder-heading">
+        Beddings for Royals, From Us to You
+      </h2>
+
+    </div>
+
+    <div
+      class="ceo-video-wrap"
+      id="ceoVideoWrap"
+      aria-label="COZY-LUXE founder video"
+    >
+
+      <div
+        class="ceo-video-placeholder"
+        id="ceoVideoPlaceholder"
+      >
+        <div class="play-badge" aria-hidden="true">▶</div>
+
+        <p>
+          Loading video…
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- TESTIMONIAL -->
+  <!-- KEPT EXACTLY AS PROVIDED -->
+  <div class="testimonial-banner">
+
+    <div class="side sw1"></div>
+
+    <div class="center">
+
+      <div class="eyebrow">
+        Loved By Our Customers
+      </div>
+
+      <div class="quote">
+        "The quality is exceptional! My bedroom feels like a 5-star hotel. Cozy-Luxe truly lives up to its name."
+      </div>
+
+      <div class="name">
+        — Maryam A.
+      </div>
+
+      <div class="dots">
+        <span class="active"></span>
+        <span></span>
+        <span></span>
+      </div>
+
+    </div>
+
+    <div class="side sw4"></div>
+
+  </div>
+
+
+  <!-- POLICY ROW -->
+  <div class="policy-row">
+
+    <section style="padding:44px 5vw;">
+
+      <div class="policy-grid">
+
+        <div class="policy-item">
+
+          <svg
+            class="picon"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.3"
+            aria-hidden="true"
+          >
+            <path d="M12 21s-7-4.5-7-10a7 7 0 0114 0c0 5.5-7 10-7 10z"/>
+            <circle cx="12" cy="11" r="2.5"/>
+          </svg>
+
+          <div>
+            <h5>Nationwide Delivery</h5>
+            <p>We deliver to all 36 states and the FCT.</p>
+          </div>
+
+        </div>
+
+
+        <div class="policy-item">
+
+          <svg
+            class="picon"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.3"
+            aria-hidden="true"
+          >
+            <path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6z"/>
+          </svg>
+
+          <div>
+            <h5>Secure Payments</h5>
+            <p>Pay safely via Flutterwave or Direct Transfer.</p>
+          </div>
+
+        </div>
+
+
+        <div class="policy-item">
+
+          <svg
+            class="picon"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.29-1.39c1.44.79 3.06 1.2 4.71 1.2h.01c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2z"/>
+          </svg>
+
+          <div>
+            <h5>Easy Ordering</h5>
+            <p>Order on WhatsApp or online in a few clicks.</p>
+          </div>
+
+        </div>
+
+
+        <div class="policy-item">
+
+          <svg
+            class="picon"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.3"
+            aria-hidden="true"
+          >
+            <path d="M21 8l-9-5-9 5 9 5 9-5z"/>
+            <path d="M3 8v8l9 5 9-5V8"/>
+          </svg>
+
+          <div>
+            <h5>Replacement Policy</h5>
+            <p>
+              Damaged goods can be returned within 48 hours for replacements.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <!-- SOCIAL / INSTAGRAM GALLERY -->
+  <section id="gallery" aria-labelledby="gallery-heading">
+
+    <div
+      class="center-head"
+      style="margin-bottom:36px;"
+    >
+      <h2 id="gallery-heading">
+        Follow Our Journey @cozyluxebeddings
+      </h2>
+    </div>
+
+    <div
+  class="insta-grid"
+  aria-label="COZY-LUXE social media gallery"
+>
+
+  <a
+    href="https://www.instagram.com/cozyluxebeddings/"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="sw sw1"
+    aria-label="Visit COZY-LUXE on Instagram"
+  ></a>
+
+  <a
+    href="https://www.instagram.com/cozyluxebeddings/"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="sw sw2"
+    aria-label="Visit COZY-LUXE on Instagram"
+  ></a>
+
+  <a
+    href="https://www.instagram.com/cozyluxebeddings/"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="sw sw3"
+    aria-label="Visit COZY-LUXE on Instagram"
+  ></a>
+
+  <a
+    href="https://www.instagram.com/cozyluxebeddings/"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="sw sw4"
+    aria-label="Visit COZY-LUXE on Instagram"
+  ></a>
+
+  <a
+    href="https://www.instagram.com/cozyluxebeddings/"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="sw sw5"
+    aria-label="Visit COZY-LUXE on Instagram"
+  ></a>
+
+  <a
+    href="https://www.instagram.com/cozyluxebeddings/"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="sw sw6"
+    aria-label="Visit COZY-LUXE on Instagram"
+  ></a>
+
+  <a
+    href="https://www.instagram.com/cozyluxebeddings/"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="sw sw7"
+    aria-label="Visit COZY-LUXE on Instagram"
+  ></a>
+
+</div>
+
+  </section>
+
+
+  <!-- NEWSLETTER -->
+  <div class="newsletter-bar">
+
+    <div class="newsletter-left">
+
+      <svg
+        width="26"
+        height="26"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#9C7A3B"
+        stroke-width="1.3"
+        aria-hidden="true"
+      >
+        <rect x="2" y="5" width="20" height="14" rx="1"/>
+        <path d="M2 6l10 8 10-8"/>
+      </svg>
+
+      <div>
+        <h4>Join Our VIP List</h4>
+        <p>
+          Be the first to know about new collections and exclusive offers.
+        </p>
+      </div>
+
+    </div>
+
+    <form
+      class="newsletter-form"
+      id="newsletterForm"
+      novalidate
+    >
+
+      <label
+        for="newsletterEmail"
+        class="sr-only"
+        style="
+          position:absolute;
+          width:1px;
+          height:1px;
+          padding:0;
+          margin:-1px;
+          overflow:hidden;
+          clip:rect(0,0,0,0);
+          white-space:nowrap;
+          border:0;
+        "
+      >
+        Email address
+      </label>
+
+      <input
+        type="email"
+        id="newsletterEmail"
+        name="email"
+        placeholder="Enter your email address"
+        autocomplete="email"
+        required
+        aria-required="true"
+      >
+
+      <button
+        type="submit"
+      >
+        Subscribe
+      </button>
+
+      <div
+        id="newsletterStatus"
+        class="newsletter-status"
+        role="status"
+        aria-live="polite"
+      ></div>
+
+    </form>
+
+  </div>
+
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+
+    <div class="footer-grid">
+
+      <!-- Brand -->
+      <div>
+
+        <div class="footer-logo-block">
+          <a
+            href="index.html"
+            aria-label="COZY-LUXE Home"
+          >
+            <img
+              src="images/logo2.png"
+              alt="COZY-LUXE"
+              class="footer-logo-img"
+              loading="lazy"
+            >
+          </a>
+        </div>
+
+        <p class="desc">
+          Hotel-quality comfort, real-person pricing. Luxury beddings,
+          fragrances and home essentials for a refined lifestyle.
+        </p>
+
+
+        <!-- Social Icons -->
+        <div class="socials">
+
+          <a
+            href="https://www.facebook.com/share/19u28qDThH/?mibextid=wwXIfr"
+            class="social-icon"
+            aria-label="COZY-LUXE on Facebook"
+            title="Facebook"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
+          </a>
+
+
+          <a
+            href="https://www.instagram.com/cozyluxebeddings?igsh=MTBxZnExaWZucmF4MA=="
+            class="social-icon"
+            aria-label="COZY-LUXE on Instagram"
+            title="Instagram"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+          </a>
+
+
+          <a
+            href="https://www.tiktok.com/@cozyluxebeddings?_r=1&_t=ZS-98a9KBLz9Ua"
+            class="social-icon"
+            aria-label="COZY-LUXE on TikTok"
+            title="TikTok"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i class="fa-brands fa-tiktok" aria-hidden="true"></i>
+          </a>
+
+
+          <a
+            href="https://wa.me/2347072987483"
+            class="social-icon"
+            aria-label="COZY-LUXE on WhatsApp"
+            title="WhatsApp"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <!-- Quick Links -->
+      <div class="footer-col">
+
+        <h5>Quick Links</h5>
+
+        <a href="index.html">Home</a>
+        <a href="collections.html">Collections</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="cart.html">Track Order</a>
+
+      </div>
+
+
+      <!-- Collections -->
+      <div class="footer-col">
+
+        <h5>Collections</h5>
+
+        <a href="collection.html?cat=bedsheets">
+          Bedsheet Collections
+        </a>
+
+        <a href="collection.html?cat=complete">
+          Complete Bedding Collections
+        </a>
+
+        <a href="collection.html?cat=pillows">
+          Pillows
+        </a>
+
+        <a href="collection.html?cat=duvets">
+          Duvets
+        </a>
+
+        <a href="collection.html?cat=nightwear">
+          Nightwear
+        </a>
+
+        <a href="collection.html?cat=blankets">
+          Blankets
+        </a>
+
+        <a href="collection.html?cat=fragrances">
+          Home Fragrances
+        </a>
+
+        <a href="collection.html?cat=candles">
+          Scented Candles
+        </a>
+
+        <a href="collection.html?cat=stack">
+          Stack Values
+        </a>
+
+      </div>
+
+
+      <!-- Customer Care -->
+      <div class="footer-col">
+
+        <h5>Customer Care</h5>
+
+        <a href="contact.html">
+          Delivery Information
+        </a>
+
+        <a href="contact.html">
+          Replacement Policy
+        </a>
+
+        <a href="contact.html">
+          Privacy Policy
+        </a>
+
+        <a href="contact.html">
+          Terms &amp; Conditions
+        </a>
+
+        <a href="contact.html">
+          FAQ
+        </a>
+
+      </div>
+
+
+      <!-- Contact -->
+      <div class="footer-col">
+
+        <h5>Contact Us</h5>
+
+        <div class="footer-contact-item">
+          <span class="fi" aria-hidden="true">☎</span>
+          <span>+234 707 298 7483</span>
+        </div>
+
+        <div class="footer-contact-item">
+          <span class="fi" aria-hidden="true">✉</span>
+          <span>cozyluxeenterprises@gmail.com</span>
+        </div>
+
+        <div class="footer-contact-item">
+          <span class="fi" aria-hidden="true">◈</span>
+          <span>
+            Nationwide Delivery — All 36 States &amp; FCT
+          </span>
+        </div>
+
+        <a
+          href="https://wa.me/2347072987483"
+          class="footer-cta whatsapp-cta"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat with COZY-LUXE on WhatsApp"
+        >
+          Chat on WhatsApp
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+
+      <span>
+        © 2026 Cozy-Luxe Enterprises. All rights reserved.
+      </span>
+    </div>
+
+  </footer>
+
+
+  <!-- Existing Application Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script type="module" src="js/firebase-init.js"></script>
+  <script src="js/products-service.js"></script>
+
+
+  <!-- Page Logic -->
+  <script>
+    (async function () {
+
+      "use strict";
+
+
+      /* =========================================================
+         SAFE HTML ESCAPING
+         ========================================================= */
+
+      function escapeHTML(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+
+      /* =========================================================
+         PRODUCT INITIALIZATION
+         ---------------------------------------------------------
+         Collections and Best Sellers are rendered automatically
+         by main.js's initHomepage() (triggered on DOMContentLoaded).
+         This call is kept here too, defensively, so the search
+         feature below always has fresh product data regardless of
+         timing — initProducts() is safe to call more than once.
+         ========================================================= */
+
+      try {
+
+        if (typeof initProducts === "function") {
+          await initProducts();
+        }
+
+      } catch (error) {
+
+        console.warn(
+          "COZY-LUXE: Could not refresh product data for search.",
+          error
+        );
+
+      }
+
+
+      /* =========================================================
+         HOMEPAGE HERO PHOTO
+         ---------------------------------------------------------
+         An admin-uploaded photo (via Site Photos in the dashboard)
+         takes priority over the static images/complete-bed.jpeg
+         fallback already baked into the .hero-photo CSS rule.
+         ========================================================= */
+
+      try {
+
+        if (typeof fsGetHeroImage === "function") {
+
+          const heroUrl = await fsGetHeroImage();
+          const heroPhotoEl = document.getElementById("heroPhoto");
+
+          if (heroUrl && heroPhotoEl) {
+            heroPhotoEl.style.backgroundImage =
+              `linear-gradient(100deg, rgba(35,27,19,0.94) 0%, rgba(35,27,19,0.55) 42%, rgba(35,27,19,0.05) 62%), url('${heroUrl}')`;
+            heroPhotoEl.style.backgroundSize = "cover";
+            heroPhotoEl.style.backgroundPosition = "center";
+          }
+
+        }
+
+      } catch (error) {
+
+        console.warn(
+          "COZY-LUXE: Could not load a custom hero photo. Using the default.",
+          error
+        );
+
+      }
+
+
+      /* =========================================================
+         INSTAGRAM / LIFESTYLE GALLERY ("Follow Our Journey")
+         ---------------------------------------------------------
+         Renders admin-uploaded photos from Firestore if any exist;
+         otherwise leaves the decorative placeholder tiles already
+         in the markup below.
+         ========================================================= */
+
+      try {
+
+        if (typeof fsListGalleryImages === "function") {
+
+          const galleryImages = await fsListGalleryImages();
+          const galleryGrid = document.querySelector(".insta-grid");
+
+          if (galleryGrid && galleryImages.length) {
+
+            galleryGrid.innerHTML = galleryImages.map(g => `
+              <a
+                href="https://www.instagram.com/cozyluxebeddings/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="sw"
+                aria-label="Visit COZY-LUXE on Instagram"
+                style="background-image:url('${escapeHTML(g.image)}'); background-size:cover; background-position:center;"
+              ></a>
+            `).join("");
+
+          }
+
+        }
+
+      } catch (error) {
+
+        console.warn(
+          "COZY-LUXE: Could not load the Instagram gallery. Using placeholder tiles.",
+          error
+        );
+
+      }
+
+
+      /* =========================================================
+         WHATSAPP CTA
+         ========================================================= */
+
+      try {
+
+        const generalMsg = encodeURIComponent(
+          "Hello COZY-LUXE,\n\nI'd like to know more about your beddings."
+        );
+
+        if (typeof whatsappLink === "function") {
+
+          document
+            .querySelectorAll(
+              ".whatsapp-cta, #headerWhatsapp"
+            )
+            .forEach(el => {
+
+              el.href = whatsappLink(generalMsg);
+
+              el.target = "_blank";
+              el.rel =
+                "noopener noreferrer";
+
+            });
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "WhatsApp initialization failed:",
+          error
+        );
+
+      }
+
+
+      /* =========================================================
+         PRODUCT SEARCH
+         ========================================================= */
+
+      const searchButton =
+        document.getElementById("searchButton");
+
+      const searchMessage =
+        document.getElementById("searchMessage");
+
+
+      function showSearchMessage(message) {
+
+        if (!searchMessage) return;
+
+        searchMessage.textContent = message;
+        searchMessage.classList.add("show");
+
+        window.clearTimeout(
+          showSearchMessage.timeout
+        );
+
+        showSearchMessage.timeout =
+          window.setTimeout(() => {
+
+            searchMessage.classList.remove(
+              "show"
+            );
+
+          }, 5000);
+      }
+
+
+      if (searchButton) {
+
+        searchButton.addEventListener(
+          "click",
+          function () {
+
+            const query =
+              window.prompt(
+                "What are you looking for?"
+              );
+
+            if (query === null) {
+              return;
+            }
+
+            const trimmed =
+              query.trim().toLowerCase();
+
+            if (!trimmed) {
+
+              showSearchMessage(
+                "Please enter a product name or category."
+              );
+
+              return;
+            }
+
+
+            try {
+
+              if (
+                typeof PRODUCTS === "undefined" ||
+                !Array.isArray(PRODUCTS)
+              ) {
+
+                window.location.href =
+                  "collections.html";
+
+                return;
+              }
+
+
+              const matches =
+                PRODUCTS
+                  .filter(Boolean)
+                  .filter(product => {
+
+                    const name =
+                      String(
+                        product.name || ""
+                      ).toLowerCase();
+
+                    const category =
+                      String(
+                        product.category || ""
+                      ).toLowerCase();
+
+                    const description =
+                      String(
+                        product.desc || ""
+                      ).toLowerCase();
+
+                    return (
+                      name.includes(trimmed) ||
+                      category.includes(trimmed) ||
+                      description.includes(trimmed)
+                    );
+
+                  });
+
+
+              if (matches.length === 1) {
+
+                window.location.href =
+                  "product.html?id=" +
+                  encodeURIComponent(matches[0].id);
+
+                return;
+              }
+
+
+              if (matches.length > 1) {
+
+                window.location.href =
+                  "collections.html";
+
+                return;
+              }
+
+
+              showSearchMessage(
+                `No product found for "${query}". Try searching our collections.`
+              );
+
+            } catch (error) {
+
+              console.error(
+                "Search failed:",
+                error
+              );
+
+              window.location.href =
+                "collections.html";
+
+            }
+
+          }
+        );
+
+      }
+
+
+      /* =========================================================
+         NEWSLETTER
+         ========================================================= */
+
+      const newsletterForm =
+        document.getElementById(
+          "newsletterForm"
+        );
+
+      const newsletterEmail =
+        document.getElementById(
+          "newsletterEmail"
+        );
+
+      const newsletterStatus =
+        document.getElementById(
+          "newsletterStatus"
+        );
+
+
+      if (
+        newsletterForm &&
+        newsletterEmail &&
+        newsletterStatus
+      ) {
+
+        newsletterForm.addEventListener(
+          "submit",
+          function (event) {
+
+            event.preventDefault();
+
+            const email =
+              newsletterEmail.value.trim();
+
+
+            if (!email) {
+
+              newsletterStatus.textContent =
+                "Please enter your email address.";
+
+              newsletterStatus.className =
+                "newsletter-status error";
+
+              newsletterEmail.focus();
+
+              return;
+            }
+
+
+            const emailPattern =
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailPattern.test(email)) {
+
+              newsletterStatus.textContent =
+                "Please enter a valid email address.";
+
+              newsletterStatus.className =
+                "newsletter-status error";
+
+              newsletterEmail.focus();
+
+              return;
+            }
+
+
+            /*
+              This stores the subscription locally so the UI
+              doesn't repeatedly ask the same visitor.
+
+              For true server-side newsletter management,
+              connect this form to your email/CRM provider
+              or Firebase backend.
+            */
+
+            try {
+
+              const existing =
+                JSON.parse(
+                  localStorage.getItem(
+                    "cozyLuxeVipSubscribers"
+                  ) || "[]"
+                );
+
+
+              if (!existing.includes(email)) {
+
+                existing.push(email);
+
+                localStorage.setItem(
+                  "cozyLuxeVipSubscribers",
+                  JSON.stringify(existing)
+                );
+
+              }
+
+
+              newsletterStatus.textContent =
+                "Thank you for joining the COZY-LUXE VIP List.";
+
+              newsletterStatus.className =
+                "newsletter-status success";
+
+              newsletterEmail.value = "";
+
+
+            } catch (error) {
+
+              console.error(
+                "Newsletter subscription error:",
+                error
+              );
+
+              /*
+                Fallback: open the user's email client.
+              */
+
+              const subject =
+                encodeURIComponent(
+                  "COZY-LUXE VIP List Subscription"
+                );
+
+              const body =
+                encodeURIComponent(
+                  "Please add this email address to the COZY-LUXE VIP List:\n\n" +
+                  email
+                );
+
+              window.location.href =
+                `mailto:cozyluxeenterprises@gmail.com?subject=${subject}&body=${body}`;
+
+            }
+
+          }
+        );
+
+      }
+
+
+      /* =========================================================
+   CEO VIDEO
+   ========================================================= */
+
+const YOUTUBE_CEO_VIDEO_ID = "b8F_U2STaho";
+
+(function () {
+
+  if (!YOUTUBE_CEO_VIDEO_ID) {
+    return;
+  }
+
+  const wrap =
+    document.getElementById("ceoVideoWrap");
+
+  const placeholder =
+    document.getElementById("ceoVideoPlaceholder");
+
+  if (!wrap) {
+    return;
+  }
+
+  const iframe =
+    document.createElement("iframe");
+
+  iframe.id =
+    "ceoYoutubePlayer";
+
+  iframe.src =
+    `https://www.youtube.com/embed/${encodeURIComponent(
+      YOUTUBE_CEO_VIDEO_ID
+    )}?enablejsapi=1&mute=1&playsinline=1&rel=0`;
+
+  iframe.title =
+    "COZY-LUXE — A Word From Our Founder";
+
+  iframe.setAttribute(
+    "frameborder",
+    "0"
+  );
+
+  iframe.setAttribute(
+    "loading",
+    "lazy"
+  );
+
+  iframe.setAttribute(
+    "allow",
+    "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  );
+
+  iframe.setAttribute(
+    "allowfullscreen",
+    ""
+  );
+
+  if (placeholder) {
+    placeholder.remove();
+  }
+
+  wrap.appendChild(iframe);
+
+})();
+
+    })();
+  </script>
+
+</body>
+</html>

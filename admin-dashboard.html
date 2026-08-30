@@ -1,0 +1,3558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard — COZY-LUXE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+  body{
+    background:var(--ivory);
+  }
+
+  .admin-header{
+    background:var(--espresso);
+    color:var(--white);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 5vw;
+  }
+
+  .admin-header .logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  .admin-header img{
+    height:36px;
+    width:auto;
+    object-fit:contain;
+  }
+
+  .admin-header .title{
+    font-family:'Playfair Display',serif;
+    font-size:16px;
+  }
+
+  .admin-header .who{
+    font-size:12px;
+    color:rgba(255,255,255,0.6);
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
+
+  .admin-header button{
+    background:none;
+    border:1px solid rgba(255,255,255,0.3);
+    color:var(--white);
+    padding:8px 16px;
+    font-size:11.5px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    cursor:pointer;
+  }
+
+  .admin-header button:hover{
+    background:rgba(255,255,255,0.08);
+  }
+
+  .admin-header button:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+  }
+
+  .admin-wrap{
+    max-width:1200px;
+    margin:0 auto;
+    padding:40px 5vw;
+  }
+
+  .admin-toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:24px;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+
+  .admin-toolbar h1{
+    font-size:24px;
+  }
+
+  .admin-toolbar p{
+    font-size:13px;
+    color:var(--muted);
+  }
+
+  table.admin-table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--white);
+    border:1px solid var(--line);
+  }
+
+  table.admin-table th{
+    text-align:left;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+    padding:14px 16px;
+    border-bottom:1px solid var(--line);
+    background:var(--ivory);
+  }
+
+  table.admin-table td{
+    padding:14px 16px;
+    border-bottom:1px solid var(--line);
+    font-size:13.5px;
+    vertical-align:middle;
+  }
+
+  table.admin-table tr:last-child td{
+    border-bottom:none;
+  }
+
+  table.admin-table img.thumb,
+  table.admin-table .thumb-fallback{
+    width:44px;
+    height:44px;
+    object-fit:cover;
+    flex-shrink:0;
+    display:block;
+  }
+
+  .row-name{
+    font-weight:700;
+  }
+
+  .row-sku{
+    font-size:11px;
+    color:var(--gold-deep);
+    font-weight:700;
+    margin-top:3px;
+  }
+
+  .row-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  .row-actions button{
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    border:1px solid var(--line);
+    background:none;
+    padding:7px 12px;
+    cursor:pointer;
+  }
+
+  .row-actions button:hover{
+    background:var(--ivory);
+  }
+
+  .row-actions button.danger{
+    border-color:rgba(178,75,60,0.4);
+    color:var(--danger);
+  }
+
+  .row-actions button.danger:hover{
+    background:rgba(178,75,60,0.07);
+  }
+
+  .empty-note{
+    padding:60px;
+    text-align:center;
+    color:var(--muted);
+    font-size:13.5px;
+  }
+
+  .admin-tabs{
+    display:flex;
+    gap:0;
+    margin-bottom:30px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .admin-tab{
+    background:none;
+    border:none;
+    padding:12px 22px;
+    font-size:12.5px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--muted);
+    border-bottom:2px solid transparent;
+    margin-bottom:-1px;
+    cursor:pointer;
+  }
+
+  .admin-tab.active{
+    color:var(--espresso);
+    border-color:var(--gold);
+    font-weight:700;
+  }
+
+  .admin-tab:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:2px;
+  }
+
+  .coll-admin-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+  }
+
+  .coll-admin-card{
+    background:var(--white);
+    border:1px solid var(--line);
+    padding:18px;
+  }
+
+  .coll-admin-card .thumb{
+    width:100%;
+    aspect-ratio:1/1;
+    object-fit:cover;
+    background:var(--ivory);
+    margin-bottom:14px;
+    display:block;
+  }
+
+  .coll-admin-card .thumb-fallback{
+    width:100%;
+    aspect-ratio:1/1;
+    margin-bottom:14px;
+  }
+
+  .coll-admin-card h4{
+    font-size:13.5px;
+    margin-bottom:10px;
+  }
+
+  .coll-admin-card input[type="file"]{
+    font-size:11.5px;
+    width:100%;
+  }
+
+  .coll-admin-card .status{
+    font-size:11px;
+    color:var(--muted);
+    margin-top:8px;
+    line-height:1.5;
+  }
+
+  /* Modal */
+  .modal-backdrop{
+    position:fixed;
+    inset:0;
+    background:rgba(43,33,24,0.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:200;
+    padding:30px;
+  }
+
+  .modal-backdrop.show{
+    display:flex;
+  }
+
+  .modal{
+    background:var(--white);
+    width:100%;
+    max-width:640px;
+    max-height:88vh;
+    overflow-y:auto;
+    padding:36px;
+  }
+
+  .modal h2{
+    font-size:20px;
+    margin-bottom:24px;
+  }
+
+  .pricing-toggle{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+  }
+
+  .pricing-toggle button{
+    flex:1;
+    padding:12px;
+    border:1px solid var(--line);
+    background:var(--white);
+    font-size:12px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    cursor:pointer;
+  }
+
+  .pricing-toggle button.active{
+    border-color:var(--espresso);
+    background:var(--espresso);
+    color:var(--white);
+  }
+
+  .size-row{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr auto;
+    gap:10px;
+    margin-bottom:10px;
+    align-items:center;
+  }
+
+  .size-row input{
+    padding:10px 12px;
+    border:1px solid var(--line);
+    font-size:13px;
+    min-width:0;
+  }
+
+  .size-row button{
+    background:none;
+    border:none;
+    color:var(--danger);
+    font-size:18px;
+    cursor:pointer;
+    padding:4px 8px;
+  }
+
+  .add-size-btn{
+    font-size:11.5px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--gold-deep);
+    border:1px dashed var(--gold-soft);
+    background:none;
+    padding:10px;
+    width:100%;
+    margin-bottom:20px;
+    cursor:pointer;
+  }
+
+  .image-upload-row{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-bottom:20px;
+  }
+
+  .image-preview{
+    width:80px;
+    height:80px;
+    object-fit:cover;
+    background:var(--ivory);
+    border:1px solid var(--line);
+    flex-shrink:0;
+  }
+
+  .modal-actions{
+    display:flex;
+    gap:12px;
+    margin-top:26px;
+  }
+
+  .modal-actions .btn{
+    flex:1;
+  }
+
+  .form-note{
+    font-size:11.5px;
+    color:var(--muted);
+    margin-top:-14px;
+    margin-bottom:18px;
+  }
+
+  .form-error{
+    display:none;
+    background:rgba(178,75,60,0.08);
+    border:1px solid rgba(178,75,60,0.25);
+    color:var(--danger);
+    padding:11px 13px;
+    font-size:12px;
+    margin-bottom:18px;
+    line-height:1.5;
+  }
+
+  .form-error.show{
+    display:block;
+  }
+
+  .loading-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(255,255,255,.92);
+    z-index:9999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:30px;
+  }
+
+  .loading-overlay.hidden{
+    display:none;
+  }
+
+  .loading-box{
+    max-width:420px;
+  }
+
+  .loading-box h2{
+    font-family:'Playfair Display',serif;
+    font-size:22px;
+    margin-bottom:10px;
+  }
+
+  .loading-box p{
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.6;
+  }
+
+  .admin-toast{
+    position:fixed;
+    right:24px;
+    bottom:24px;
+    max-width:360px;
+    background:var(--espresso);
+    color:var(--white);
+    padding:13px 16px;
+    font-size:12px;
+    line-height:1.5;
+    box-shadow:0 8px 30px rgba(0,0,0,.18);
+    transform:translateY(20px);
+    opacity:0;
+    pointer-events:none;
+    transition:.25s ease;
+    z-index:10000;
+  }
+
+  .admin-toast.show{
+    transform:translateY(0);
+    opacity:1;
+  }
+
+  .admin-toast.error{
+    background:var(--danger);
+  }
+
+  @media(max-width:1000px){
+    .coll-admin-grid{
+      grid-template-columns:repeat(2,1fr);
+    }
+  }
+
+  @media(max-width:760px){
+    .admin-header{
+      padding:14px 20px;
+      gap:15px;
+    }
+
+    .admin-header .title{
+      font-size:14px;
+    }
+
+    .admin-header .who{
+      gap:8px;
+    }
+
+    .admin-header #whoEmail{
+      display:none;
+    }
+
+    .admin-wrap{
+      padding:28px 20px;
+    }
+
+    .admin-toolbar{
+      align-items:flex-start;
+    }
+
+    .admin-toolbar > div:last-child{
+      width:100%;
+    }
+
+    .admin-toolbar > div:last-child .btn{
+      flex:1;
+    }
+
+    .admin-tabs{
+      overflow-x:auto;
+    }
+
+    .admin-tab{
+      white-space:nowrap;
+      padding-left:16px;
+      padding-right:16px;
+    }
+
+    .table-wrap-scroll{
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+    }
+
+    table.admin-table{
+      min-width:760px;
+    }
+
+    .coll-admin-grid{
+      grid-template-columns:1fr;
+    }
+
+    .modal-backdrop{
+      padding:15px;
+    }
+
+    .modal{
+      padding:24px 18px;
+      max-height:92vh;
+    }
+
+    .form-row{
+      grid-template-columns:1fr !important;
+    }
+
+    .size-row{
+      grid-template-columns:1fr 1fr;
+    }
+
+    .size-row button{
+      justify-self:end;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<!-- Initial loading/authentication screen -->
+<div class="loading-overlay" id="initialLoading">
+  <div class="loading-box">
+    <h2>COZY-LUXE</h2>
+    <p>Checking administrator access…</p>
+  </div>
+</div>
+
+<header class="admin-header">
+  <div class="logo">
+    <img src="images/logo2.png" alt="COZY-LUXE">
+    <span class="title">Admin Dashboard</span>
+  </div>
+
+  <div class="who">
+    <span id="whoEmail">—</span>
+    <button id="signOutBtn" type="button">Sign Out</button>
+  </div>
+</header>
+
+<div class="admin-wrap">
+
+  <div class="admin-tabs">
+    <button class="admin-tab active" data-tab="products" type="button">
+      Products
+    </button>
+
+    <button class="admin-tab" data-tab="collections" type="button">
+      Collections
+    </button>
+
+    <button class="admin-tab" data-tab="sitephotos" type="button">
+      Site Photos
+    </button>
+  </div>
+
+  <!-- PRODUCTS -->
+  <div id="productsPanel">
+
+    <div class="admin-toolbar">
+
+      <div>
+        <h1>Products</h1>
+        <p id="countNote">Loading…</p>
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-outline-dark" id="seedBtn" type="button">
+          Import Built-In Catalog
+        </button>
+
+        <button class="btn btn-dark" id="addProductBtn" type="button">
+          + Add Product
+        </button>
+      </div>
+
+    </div>
+
+    <div id="tableWrap" class="table-wrap-scroll">
+
+      <table class="admin-table">
+
+        <thead>
+          <tr>
+            <th>Photo</th>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Best Seller</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody id="productRows"></tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+  <!-- COLLECTIONS -->
+  <div id="collectionsPanel" style="display:none;">
+
+    <div class="admin-toolbar">
+
+      <div>
+        <h1>Collections</h1>
+        <p>
+          Upload the photo shown on each collection tile across the site.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="coll-admin-grid" id="collAdminGrid"></div>
+
+  </div>
+
+
+  <!-- SITE PHOTOS -->
+  <div id="sitephotosPanel" style="display:none;">
+
+    <div class="admin-toolbar">
+      <div>
+        <h1>Site Photos</h1>
+        <p>Manage the homepage hero photo and the "Follow Our Journey" Instagram gallery.</p>
+      </div>
+    </div>
+
+    <div style="margin-bottom:50px;">
+      <h3 style="font-size:15px; margin-bottom:6px;">Homepage Hero Photo</h3>
+      <p style="font-size:12.5px; color:var(--muted); margin-bottom:18px;">Shown behind the "Luxury Comfort. Timeless Elegance." headline on the homepage.</p>
+      <div class="coll-admin-card" style="max-width:340px;">
+        <img class="thumb" id="heroThumbPreview" src="" style="display:none;">
+        <div class="thumb-fallback sw1" id="heroThumbFallback"></div>
+        <input type="file" id="heroImageInput" accept="image/jpeg,image/png,image/webp,image/gif">
+        <div class="status" id="heroUploadStatus">Loading current photo…</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <h3 style="font-size:15px;">Instagram / Lifestyle Gallery</h3>
+        <button class="btn btn-outline-dark" id="addGalleryPhotoBtn" type="button" style="padding:8px 16px; font-size:11px;">+ Add Photo</button>
+      </div>
+      <p style="font-size:12.5px; color:var(--muted); margin-bottom:18px;">Shown in the "Follow Our Journey @cozyluxebeddings" section on the homepage. Add up to 8 photos.</p>
+      <div class="coll-admin-grid" id="galleryAdminGrid"></div>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ADD / EDIT PRODUCT MODAL -->
+<div class="modal-backdrop" id="modalBackdrop">
+
+  <div class="modal">
+
+    <h2 id="modalTitle">Add Product</h2>
+
+    <div class="form-error" id="formError"></div>
+
+    <form id="productForm">
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label for="fName">Product Name</label>
+          <input type="text" id="fName" required maxlength="120">
+        </div>
+
+        <div class="form-group">
+          <label for="fSku">Product Code (SKU)</label>
+          <input type="text" id="fSku" required maxlength="80">
+        </div>
+
+      </div>
+
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label for="fId">ID (slug)</label>
+          <input type="text" id="fId" required maxlength="100">
+        </div>
+
+        <div class="form-group">
+          <label for="fCategory">Category</label>
+          <select id="fCategory" required></select>
+        </div>
+
+      </div>
+
+      <div class="form-note" id="idNote">
+        Used in the URL — lowercase, no spaces.
+        Can't be changed after creation.
+      </div>
+
+
+      <!-- PRODUCT IMAGE -->
+      <div class="form-group">
+
+        <label for="fImageInput">Product Photo</label>
+
+        <div class="image-upload-row">
+
+          <img
+            class="image-preview"
+            id="imagePreview"
+            src=""
+            alt="Product preview"
+            style="display:none;"
+          >
+
+          <div style="flex:1;">
+
+            <input
+              type="file"
+              id="fImageInput"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+            >
+
+            <div
+              id="imageUploadStatus"
+              style="font-size:11.5px; color:var(--muted); margin-top:6px;"
+            >
+              Optional — leave blank to use a placeholder.
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- PRICING -->
+      <div class="form-group">
+
+        <label>Pricing</label>
+
+        <div class="pricing-toggle">
+
+          <button
+            type="button"
+            id="modeFlatBtn"
+            class="active"
+          >
+            Flat Price
+          </button>
+
+          <button
+            type="button"
+            id="modeSizesBtn"
+          >
+            Size-Based Pricing
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- FLAT PRICE -->
+      <div id="flatPriceFields">
+
+        <div class="form-row">
+
+          <div class="form-group">
+            <label for="fPrice">Selling Price (₦)</label>
+            <input
+              type="number"
+              id="fPrice"
+              min="0"
+              step="1"
+              inputmode="numeric"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="fOldPrice">
+              Regular Price — optional
+            </label>
+
+            <input
+              type="number"
+              id="fOldPrice"
+              min="0"
+              step="1"
+              placeholder="Leave blank if no discount"
+              inputmode="numeric"
+            >
+          </div>
+
+        </div>
+
+        <div class="form-note">
+          If a regular price is entered and is higher than the selling price,
+          the storefront can display the regular price as the crossed-out
+          price.
+        </div>
+
+      </div>
+
+
+      <!-- SIZE PRICING -->
+      <div id="sizePriceFields" style="display:none;">
+
+        <div id="sizeRows"></div>
+
+        <button
+          type="button"
+          class="add-size-btn"
+          id="addSizeBtn"
+        >
+          + Add Size
+        </button>
+
+      </div>
+
+
+      <!-- VARIANT / INCLUDES -->
+      <div class="form-row">
+
+        <div class="form-group">
+          <label for="fVariant">
+            Variant — optional
+          </label>
+
+          <input
+            type="text"
+            id="fVariant"
+            placeholder="e.g. 6 × 7"
+            maxlength="100"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="fIncludes">
+            Includes — optional
+          </label>
+
+          <input
+            type="text"
+            id="fIncludes"
+            placeholder="e.g. 1 Flat Sheet + 4 Pillowcases"
+            maxlength="250"
+          >
+        </div>
+
+      </div>
+
+
+      <!-- DESCRIPTION -->
+      <div class="form-group">
+
+        <label for="fDesc">Description</label>
+
+        <textarea
+          id="fDesc"
+          rows="3"
+          required
+          maxlength="1000"
+        ></textarea>
+
+      </div>
+
+
+      <!-- BEST SELLER -->
+      <div class="form-group">
+
+        <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+          <input
+            type="checkbox"
+            id="fBestSeller"
+            style="width:16px; height:16px; accent-color:var(--gold-deep);"
+          >
+          Show in "Best Sellers" on the homepage
+        </label>
+
+      </div>
+
+
+      <!-- ACTIONS -->
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="btn btn-outline-dark"
+          id="cancelBtn"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-dark"
+          id="saveBtn"
+        >
+          Save Product
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<div class="admin-toast" id="adminToast"></div>
+
+
+<!-- Firebase / App Scripts -->
+<script src="js/data.js"></script>
+<script type="module" src="js/firebase-init.js"></script>
+<script src="js/products-service.js"></script>
+<script src="js/cloudinary.js"></script>
+
+
+<script>
+(function(){
+
+  "use strict";
+
+
+  /* =========================================================
+     HELPERS
+     ========================================================= */
+
+  function waitForFb(timeoutMs = 5000){
+
+    return new Promise(resolve => {
+
+      if(window.fb){
+        resolve(window.fb);
+        return;
+      }
+
+      let finished = false;
+
+      const done = value => {
+        if(finished) return;
+        finished = true;
+        resolve(value);
+      };
+
+      window.addEventListener(
+        "firebase-ready",
+        () => done(window.fb || null),
+        { once:true }
+      );
+
+      setTimeout(
+        () => done(window.fb || null),
+        timeoutMs
+      );
+
+    });
+
+  }
+
+
+  function escapeHTML(value){
+
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+
+  function escapeAttribute(value){
+    return escapeHTML(value);
+  }
+
+
+  function slugify(value){
+
+    return String(value || "")
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g,"-")
+      .replace(/(^-|-$)/g,"")
+      .slice(0,100);
+
+  }
+
+
+  function normaliseSKU(value){
+
+    return String(value || "")
+      .trim()
+      .toUpperCase()
+      .replace(/\s+/g,"-")
+      .slice(0,80);
+
+  }
+
+
+  function showToast(message, type = "success"){
+
+    const toast = document.getElementById("adminToast");
+
+    toast.textContent = message;
+    toast.className = "admin-toast show";
+
+    if(type === "error"){
+      toast.classList.add("error");
+    }
+
+    clearTimeout(window.__toastTimer);
+
+    window.__toastTimer = setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3500);
+
+  }
+
+
+  function showFormError(message){
+
+    const box = document.getElementById("formError");
+
+    box.textContent = message;
+    box.classList.add("show");
+
+  }
+
+
+  function clearFormError(){
+
+    const box = document.getElementById("formError");
+
+    box.textContent = "";
+    box.classList.remove("show");
+
+  }
+
+
+  function getErrorMessage(error){
+
+    if(!error) return "An unknown error occurred.";
+
+    if(typeof error === "string") return error;
+
+    if(error.message) return error.message;
+
+    return "Something went wrong. Please try again.";
+
+  }
+
+
+  function safeImageURL(url){
+
+    if(!url) return "";
+
+    try{
+
+      const parsed = new URL(url, window.location.href);
+
+      const allowed = [
+        "https:",
+        "http:"
+      ];
+
+      if(!allowed.includes(parsed.protocol)){
+        return "";
+      }
+
+      return parsed.href;
+
+    }catch{
+      return "";
+    }
+
+  }
+
+
+  function formatPrice(value){
+
+    if(value === null || value === undefined || value === ""){
+      return "Ask for Price";
+    }
+
+    const number = Number(value);
+
+    if(!Number.isFinite(number)){
+      return "Ask for Price";
+    }
+
+    return "₦" + number.toLocaleString("en-NG");
+
+  }
+
+
+  /* =========================================================
+     FIREBASE INITIALISATION
+     ========================================================= */
+
+  (async function initAdmin(){
+
+    const loading = document.getElementById("initialLoading");
+
+    const fb = await waitForFb();
+
+    if(!fb || !fb.auth || !fb.db){
+
+      loading.innerHTML = `
+        <div class="loading-box">
+          <h2>COZY-LUXE</h2>
+          <p>
+            Firebase could not be initialized.
+            Please check your Firebase configuration and try again.
+          </p>
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    /* =======================================================
+       AUTH GUARD
+       ======================================================= */
+
+    let authenticatedUser = null;
+
+    fb.onAuthStateChanged(
+      fb.auth,
+      async user => {
+
+        if(!user){
+
+          window.location.replace("admin-login.html");
+          return;
+
+        }
+
+
+        const email = String(user.email || "").toLowerCase();
+
+        const allowedEmails = Array.isArray(fb.ADMIN_EMAILS)
+          ? fb.ADMIN_EMAILS.map(e => String(e).toLowerCase())
+          : [];
+
+
+        if(!allowedEmails.includes(email)){
+
+          try{
+            await fb.signOut(fb.auth);
+          }catch{}
+
+          alert(
+            "Your account is not authorized to access the COZY-LUXE admin dashboard."
+          );
+
+          window.location.replace("admin-login.html");
+
+          return;
+
+        }
+
+
+        authenticatedUser = user;
+
+        document.getElementById("whoEmail").textContent =
+          user.email || "Administrator";
+
+        loading.classList.add("hidden");
+
+        await startDashboard();
+
+      }
+    );
+
+
+    /* =======================================================
+       SIGN OUT
+       ======================================================= */
+
+    document
+      .getElementById("signOutBtn")
+      .addEventListener("click", async function(){
+
+        this.disabled = true;
+        this.textContent = "Signing Out…";
+
+        try{
+
+          await fb.signOut(fb.auth);
+
+          window.location.replace("admin-login.html");
+
+        }catch(error){
+
+          this.disabled = false;
+          this.textContent = "Sign Out";
+
+          showToast(
+            getErrorMessage(error),
+            "error"
+          );
+
+        }
+
+      });
+
+
+    /* =======================================================
+       DASHBOARD
+       ======================================================= */
+
+    async function startDashboard(){
+
+      const catSelect =
+        document.getElementById("fCategory");
+
+
+      /* -----------------------------------------------------
+         CATEGORY DROPDOWN
+         ----------------------------------------------------- */
+
+      catSelect.innerHTML = CATEGORIES
+        .map(c => `
+          <option value="${escapeAttribute(c.id)}">
+            ${escapeHTML(c.name)}
+          </option>
+        `)
+        .join("");
+
+
+      /* -----------------------------------------------------
+         STATE
+         ----------------------------------------------------- */
+
+      let currentEditId = null;
+
+      let currentEditingProduct = null;
+
+      let uploadedImageUrl = null;
+
+      let sizeRowCount = 0;
+
+
+      /* =====================================================
+         LOAD PRODUCTS TABLE
+         ===================================================== */
+
+      async function loadTable(){
+
+        const countNote =
+          document.getElementById("countNote");
+
+        const tableWrap =
+          document.getElementById("tableWrap");
+
+        const rows =
+          document.getElementById("productRows");
+
+
+        countNote.textContent = "Loading…";
+
+
+        try{
+
+          const items = await fsListProducts();
+
+
+          countNote.textContent =
+            `${items.length} product${items.length === 1 ? "" : "s"} in Firestore.` +
+            (
+              items.length === 0
+                ? " The storefront is currently showing the built-in fallback catalog."
+                : ""
+            );
+
+
+          if(!items.length){
+
+            rows.innerHTML = `
+              <tr>
+                <td colspan="6" class="empty-note">
+                  No products yet — click "Add Product"
+                  to create your first one in Firestore.
+                </td>
+              </tr>
+            `;
+
+            return;
+
+          }
+
+
+          rows.innerHTML = items.map(product => {
+
+            const p = product || {};
+
+            const category =
+              typeof getCategory === "function"
+                ? getCategory(p.category)
+                : null;
+
+
+            let priceLabel = "Ask for Price";
+
+
+            if(
+              Array.isArray(p.sizes) &&
+              p.sizes.length
+            ){
+
+              const prices = p.sizes
+                .map(size => Number(size.price))
+                .filter(Number.isFinite);
+
+              if(prices.length){
+
+                priceLabel =
+                  "From " +
+                  formatPrice(Math.min(...prices));
+
+              }
+
+            }else if(
+              p.price !== null &&
+              p.price !== undefined &&
+              p.price !== ""
+            ){
+
+              priceLabel = formatPrice(p.price);
+
+            }
+
+
+            const imageURL =
+              safeImageURL(p.image);
+
+
+            const photo = imageURL
+              ? `
+                <img
+                  class="thumb"
+                  src="${escapeAttribute(imageURL)}"
+                  alt="${escapeAttribute(p.name || "Product")}"
+                  loading="lazy"
+                >
+              `
+              : `
+                <div
+                  class="thumb-fallback ${escapeAttribute(p.swatch || "sw1")}"
+                  aria-label="No product image"
+                ></div>
+              `;
+
+
+            return `
+              <tr>
+
+                <td>
+                  ${photo}
+                </td>
+
+                <td>
+                  <div class="row-name">
+                    ${escapeHTML(p.name || "Unnamed Product")}
+                  </div>
+
+                  <div class="row-sku">
+                    ${escapeHTML(p.sku || "")}
+                  </div>
+                </td>
+
+                <td>
+                  ${escapeHTML(
+                    category
+                      ? category.name
+                      : (p.category || "—")
+                  )}
+                </td>
+
+                <td>
+                  ${escapeHTML(priceLabel)}
+                </td>
+
+                <td>
+                  <button
+                    type="button"
+                    data-action="toggle-bestseller"
+                    data-id="${escapeAttribute(p.id)}"
+                    data-current="${p.bestSeller === true ? "true" : "false"}"
+                    class="${p.bestSeller === true ? "btn-outline-dark" : ""}"
+                    style="
+                      font-size:10.5px;
+                      letter-spacing:0.06em;
+                      text-transform:uppercase;
+                      padding:7px 12px;
+                      border:1px solid ${p.bestSeller === true ? "var(--gold-deep)" : "var(--line)"};
+                      background:${p.bestSeller === true ? "var(--gold-deep)" : "none"};
+                      color:${p.bestSeller === true ? "var(--white)" : "var(--muted)"};
+                      white-space:nowrap;
+                    "
+                  >
+                    ${p.bestSeller === true ? "★ Featured" : "☆ Feature"}
+                  </button>
+                </td>
+
+                <td class="row-actions">
+
+                  <button
+                    type="button"
+                    data-action="edit"
+                    data-id="${escapeAttribute(p.id)}"
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    type="button"
+                    data-action="delete"
+                    data-id="${escapeAttribute(p.id)}"
+                    class="danger"
+                  >
+                    Delete
+                  </button>
+
+                </td>
+
+              </tr>
+            `;
+
+          }).join("");
+
+
+          /* -------------------------------------------------
+             EDIT
+             ------------------------------------------------- */
+
+          rows
+            .querySelectorAll(
+              'button[data-action="edit"]'
+            )
+            .forEach(button => {
+
+              button.addEventListener(
+                "click",
+                () => {
+
+                  const product =
+                    items.find(
+                      p => String(p.id) === String(button.dataset.id)
+                    );
+
+                  if(product){
+                    openModal(product);
+                  }
+
+                }
+              );
+
+            });
+
+
+          /* -------------------------------------------------
+             DELETE
+             ------------------------------------------------- */
+
+          rows
+            .querySelectorAll(
+              'button[data-action="delete"]'
+            )
+            .forEach(button => {
+
+              button.addEventListener(
+                "click",
+                async () => {
+
+                  const productId =
+                    button.dataset.id;
+
+
+                  if(!productId) return;
+
+
+                  const product =
+                    items.find(
+                      p => String(p.id) === String(productId)
+                    );
+
+
+                  const productName =
+                    product?.name || productId;
+
+
+                  if(
+                    !confirm(
+                      `Delete "${productName}"?\n\nThis action cannot be undone.`
+                    )
+                  ){
+
+                    return;
+
+                  }
+
+
+                  button.disabled = true;
+                  button.textContent = "Deleting…";
+
+
+                  try{
+
+                    await fsDeleteProduct(productId);
+
+                    showToast(
+                      "Product deleted successfully."
+                    );
+
+                    await loadTable();
+
+                  }catch(error){
+
+                    button.disabled = false;
+                    button.textContent = "Delete";
+
+                    showToast(
+                      getErrorMessage(error),
+                      "error"
+                    );
+
+                  }
+
+                }
+              );
+
+            });
+
+
+          /* -------------------------------------------------
+             TOGGLE BEST SELLER
+             ------------------------------------------------- */
+
+          rows
+            .querySelectorAll(
+              'button[data-action="toggle-bestseller"]'
+            )
+            .forEach(button => {
+
+              button.addEventListener(
+                "click",
+                async () => {
+
+                  const productId =
+                    button.dataset.id;
+
+                  if(!productId) return;
+
+                  const isCurrentlyBestSeller =
+                    button.dataset.current === "true";
+
+                  const nextValue =
+                    !isCurrentlyBestSeller;
+
+                  button.disabled = true;
+                  button.textContent = "Saving…";
+
+                  try{
+
+                    if(typeof fsSetBestSeller !== "function"){
+                      throw new Error(
+                        "fsSetBestSeller() is unavailable. Check js/products-service.js."
+                      );
+                    }
+
+                    await fsSetBestSeller(productId, nextValue);
+
+                    showToast(
+                      nextValue
+                        ? "Added to Best Sellers."
+                        : "Removed from Best Sellers."
+                    );
+
+                    await loadTable();
+
+                  }catch(error){
+
+                    button.disabled = false;
+                    button.textContent =
+                      isCurrentlyBestSeller ? "★ Featured" : "☆ Feature";
+
+                    showToast(
+                      getErrorMessage(error),
+                      "error"
+                    );
+
+                  }
+
+                }
+              );
+
+            });
+
+
+        }catch(error){
+
+          countNote.textContent = "Unable to load products.";
+
+          rows.innerHTML = `
+            <tr>
+              <td colspan="6" class="empty-note">
+                ${escapeHTML(getErrorMessage(error))}
+              </td>
+            </tr>
+          `;
+
+        }
+
+      }
+
+
+      /* =====================================================
+         MODAL
+         ===================================================== */
+
+      const backdrop =
+        document.getElementById("modalBackdrop");
+
+      const form =
+        document.getElementById("productForm");
+
+
+      function addSizeRow(
+        label = "",
+        price = "",
+        sku = ""
+      ){
+
+        const id =
+          "size" + (sizeRowCount++);
+
+
+        const div =
+          document.createElement("div");
+
+
+        div.className = "size-row";
+        div.dataset.rowId = id;
+
+
+        const labelInput =
+          document.createElement("input");
+
+        labelInput.type = "text";
+        labelInput.placeholder = "Size label (e.g. 300 ml)";
+        labelInput.className = "sz-label";
+        labelInput.value = label;
+        labelInput.maxLength = 50;
+
+
+        const priceInput =
+          document.createElement("input");
+
+        priceInput.type = "number";
+        priceInput.placeholder = "Price (₦)";
+        priceInput.className = "sz-price";
+        priceInput.value = price;
+        priceInput.min = "0";
+        priceInput.step = "1";
+
+
+        const skuInput =
+          document.createElement("input");
+
+        skuInput.type = "text";
+        skuInput.placeholder = "SKU";
+        skuInput.className = "sz-sku";
+        skuInput.value = sku;
+        skuInput.maxLength = 80;
+
+
+        const removeButton =
+          document.createElement("button");
+
+        removeButton.type = "button";
+        removeButton.title = "Remove size";
+        removeButton.setAttribute(
+          "aria-label",
+          "Remove size"
+        );
+        removeButton.textContent = "✕";
+
+
+        removeButton.addEventListener(
+          "click",
+          () => div.remove()
+        );
+
+
+        div.appendChild(labelInput);
+        div.appendChild(priceInput);
+        div.appendChild(skuInput);
+        div.appendChild(removeButton);
+
+
+        document
+          .getElementById("sizeRows")
+          .appendChild(div);
+
+      }
+
+
+      function setPricingMode(mode){
+
+        const isFlat = mode === "flat";
+
+
+        document
+          .getElementById("modeFlatBtn")
+          .classList.toggle("active", isFlat);
+
+
+        document
+          .getElementById("modeSizesBtn")
+          .classList.toggle("active", !isFlat);
+
+
+        document
+          .getElementById("flatPriceFields")
+          .style.display =
+            isFlat ? "block" : "none";
+
+
+        document
+          .getElementById("sizePriceFields")
+          .style.display =
+            isFlat ? "none" : "block";
+
+      }
+
+
+      document
+        .getElementById("modeFlatBtn")
+        .addEventListener(
+          "click",
+          () => setPricingMode("flat")
+        );
+
+
+      document
+        .getElementById("modeSizesBtn")
+        .addEventListener(
+          "click",
+          () => setPricingMode("sizes")
+        );
+
+
+      document
+        .getElementById("addSizeBtn")
+        .addEventListener(
+          "click",
+          () => addSizeRow()
+        );
+
+
+      /* -----------------------------------------------------
+         AUTO SLUG
+         ----------------------------------------------------- */
+
+      document
+        .getElementById("fName")
+        .addEventListener(
+          "input",
+          event => {
+
+            if(currentEditId){
+              return;
+            }
+
+            document.getElementById("fId").value =
+              slugify(event.target.value);
+
+          }
+        );
+
+
+      /* -----------------------------------------------------
+         IMAGE UPLOAD
+         ----------------------------------------------------- */
+
+      document
+        .getElementById("fImageInput")
+        .addEventListener(
+          "change",
+          async () => {
+
+            const input =
+              document.getElementById("fImageInput");
+
+            const file = input.files?.[0];
+
+            if(!file){
+              return;
+            }
+
+
+            const status =
+              document.getElementById(
+                "imageUploadStatus"
+              );
+
+
+            const preview =
+              document.getElementById(
+                "imagePreview"
+              );
+
+
+            const maxSize =
+              10 * 1024 * 1024;
+
+
+            if(file.size > maxSize){
+
+              input.value = "";
+
+              status.textContent =
+                "Image is too large. Maximum size is 10MB.";
+
+              showToast(
+                "Please select an image below 10MB.",
+                "error"
+              );
+
+              return;
+
+            }
+
+
+            if(
+              !file.type.startsWith("image/")
+            ){
+
+              input.value = "";
+
+              status.textContent =
+                "Please select a valid image.";
+
+              return;
+
+            }
+
+
+            status.textContent =
+              "Uploading… 0%";
+
+
+            try{
+
+              if(
+                typeof uploadToCloudinary !==
+                "function"
+              ){
+
+                throw new Error(
+                  "Cloudinary upload function is not available."
+                );
+
+              }
+
+
+              const result =
+                await uploadToCloudinary(
+                  file,
+                  "products",
+                  pct => {
+                    status.textContent =
+                      `Uploading… ${pct}%`;
+                  }
+                );
+
+
+              if(!result?.secure_url){
+
+                throw new Error(
+                  "Cloudinary did not return a valid image URL."
+                );
+
+              }
+
+
+              uploadedImageUrl =
+                result.secure_url;
+
+
+              preview.src =
+                safeImageURL(uploadedImageUrl);
+
+
+              preview.style.display =
+                "block";
+
+
+              status.textContent =
+                "✓ Uploaded successfully";
+
+
+            }catch(error){
+
+              uploadedImageUrl =
+                currentEditingProduct?.image || null;
+
+
+              status.textContent =
+                "Upload failed — " +
+                getErrorMessage(error);
+
+
+              input.value = "";
+
+            }
+
+          }
+        );
+
+
+      /* -----------------------------------------------------
+         OPEN MODAL
+         ----------------------------------------------------- */
+
+      function openModal(product){
+
+        clearFormError();
+
+        form.reset();
+
+        document
+          .getElementById("sizeRows")
+          .innerHTML = "";
+
+
+        sizeRowCount = 0;
+
+
+        currentEditingProduct =
+          product || null;
+
+
+        currentEditId =
+          product
+            ? product.id
+            : null;
+
+
+        uploadedImageUrl =
+          product?.image || null;
+
+
+        const preview =
+          document.getElementById(
+            "imagePreview"
+          );
+
+
+        if(uploadedImageUrl){
+
+          const safeURL =
+            safeImageURL(uploadedImageUrl);
+
+
+          if(safeURL){
+
+            preview.src = safeURL;
+            preview.style.display = "block";
+
+          }else{
+
+            preview.style.display = "none";
+
+          }
+
+        }else{
+
+          preview.removeAttribute("src");
+          preview.style.display = "none";
+
+        }
+
+
+        document
+          .getElementById(
+            "imageUploadStatus"
+          )
+          .textContent =
+            product?.image
+              ? "Current image is shown above. Upload another to replace it."
+              : "Optional — leave blank to use a placeholder.";
+
+
+        document
+          .getElementById("modalTitle")
+          .textContent =
+            product
+              ? "Edit Product"
+              : "Add Product";
+
+
+        const idInput =
+          document.getElementById("fId");
+
+
+        idInput.disabled =
+          !!product;
+
+
+        document
+          .getElementById("idNote")
+          .style.display =
+            product ? "none" : "block";
+
+
+        document
+          .getElementById("fName")
+          .value =
+            product?.name || "";
+
+
+        document
+          .getElementById("fSku")
+          .value =
+            product?.sku || "";
+
+
+        idInput.value =
+          product?.id || "";
+
+
+        document
+          .getElementById("fCategory")
+          .value =
+            product?.category ||
+            CATEGORIES[0]?.id ||
+            "";
+
+
+        document
+          .getElementById("fVariant")
+          .value =
+            product?.variant || "";
+
+
+        document
+          .getElementById("fIncludes")
+          .value =
+            product?.includes || "";
+
+
+        document
+          .getElementById("fDesc")
+          .value =
+            product?.desc || "";
+
+
+        document
+          .getElementById("fBestSeller")
+          .checked =
+            product?.bestSeller === true;
+
+
+        const hasSizes =
+          Array.isArray(product?.sizes) &&
+          product.sizes.length > 0;
+
+
+        setPricingMode(
+          hasSizes ? "sizes" : "flat"
+        );
+
+
+        if(hasSizes){
+
+          product.sizes.forEach(size => {
+
+            addSizeRow(
+              size.label || "",
+              size.price ?? "",
+              size.sku || ""
+            );
+
+          });
+
+        }else{
+
+          document
+            .getElementById("fPrice")
+            .value =
+              product?.price !== null &&
+              product?.price !== undefined
+                ? product.price
+                : "";
+
+
+          document
+            .getElementById("fOldPrice")
+            .value =
+              product?.oldPrice !== null &&
+              product?.oldPrice !== undefined
+                ? product.oldPrice
+                : "";
+
+        }
+
+
+        backdrop.classList.add("show");
+
+
+        setTimeout(() => {
+
+          document
+            .getElementById("fName")
+            .focus();
+
+        },50);
+
+      }
+
+
+      document
+        .getElementById("addProductBtn")
+        .addEventListener(
+          "click",
+          () => openModal(null)
+        );
+
+
+      /* -----------------------------------------------------
+         CLOSE MODAL
+         ----------------------------------------------------- */
+
+      function closeModal(){
+
+        backdrop.classList.remove("show");
+
+        clearFormError();
+
+        currentEditId = null;
+        currentEditingProduct = null;
+        uploadedImageUrl = null;
+
+      }
+
+
+      document
+        .getElementById("cancelBtn")
+        .addEventListener(
+          "click",
+          closeModal
+        );
+
+
+      backdrop.addEventListener(
+        "click",
+        event => {
+
+          if(event.target === backdrop){
+            closeModal();
+          }
+
+        }
+      );
+
+
+      document.addEventListener(
+        "keydown",
+        event => {
+
+          if(
+            event.key === "Escape" &&
+            backdrop.classList.contains("show")
+          ){
+
+            closeModal();
+
+          }
+
+        }
+      );
+
+
+      /* =====================================================
+         SEED BUILT-IN CATALOG
+         ===================================================== */
+
+      document
+        .getElementById("seedBtn")
+        .addEventListener(
+          "click",
+          async () => {
+
+            if(
+              !Array.isArray(PRODUCTS) ||
+              !PRODUCTS.length
+            ){
+
+              showToast(
+                "The built-in product catalog is empty.",
+                "error"
+              );
+
+              return;
+
+            }
+
+
+            if(
+              !confirm(
+                `Import all ${PRODUCTS.length} products from the built-in catalog into Firestore?\n\nExisting products with the same ID will be updated.`
+              )
+            ){
+
+              return;
+
+            }
+
+
+            const btn =
+              document.getElementById("seedBtn");
+
+
+            btn.disabled = true;
+            btn.textContent = "Importing…";
+
+
+            try{
+
+              let imported = 0;
+
+
+              for(const originalProduct of PRODUCTS){
+
+                const product = {
+                  ...originalProduct
+                };
+
+
+                await fsSaveProduct(product);
+
+                imported++;
+
+                btn.textContent =
+                  `Importing ${imported}/${PRODUCTS.length}…`;
+
+              }
+
+
+              showToast(
+                `${imported} products imported successfully.`
+              );
+
+
+              await loadTable();
+
+
+            }catch(error){
+
+              showToast(
+                getErrorMessage(error),
+                "error"
+              );
+
+            }finally{
+
+              btn.disabled = false;
+              btn.textContent =
+                "Import Built-In Catalog";
+
+            }
+
+          }
+        );
+
+
+      /* =====================================================
+         VALIDATE PRODUCT
+         ===================================================== */
+
+      async function validateProduct(product){
+
+        if(!product.name){
+
+          throw new Error(
+            "Product name is required."
+          );
+
+        }
+
+
+        if(!product.id){
+
+          throw new Error(
+            "Product ID is required."
+          );
+
+        }
+
+
+        if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(product.id)){
+
+          throw new Error(
+            "Product ID must contain only lowercase letters, numbers and hyphens."
+          );
+
+        }
+
+
+        if(!product.sku){
+
+          throw new Error(
+            "Product SKU is required."
+          );
+
+        }
+
+
+        if(!product.category){
+
+          throw new Error(
+            "Please select a category."
+          );
+
+        }
+
+
+        if(!product.desc){
+
+          throw new Error(
+            "Product description is required."
+          );
+
+        }
+
+
+        if(product.price !== null){
+
+          if(
+            !Number.isFinite(product.price) ||
+            product.price < 0
+          ){
+
+            throw new Error(
+              "Selling price must be a valid positive amount."
+            );
+
+          }
+
+        }
+
+
+        if(
+          product.oldPrice !== null &&
+          product.oldPrice !== undefined
+        ){
+
+          if(
+            !Number.isFinite(product.oldPrice) ||
+            product.oldPrice < 0
+          ){
+
+            throw new Error(
+              "Regular price must be a valid amount."
+            );
+
+          }
+
+
+          if(
+            product.price !== null &&
+            product.oldPrice > 0 &&
+            product.oldPrice < product.price
+          ){
+
+            throw new Error(
+              "Regular price should normally be greater than or equal to the selling price."
+            );
+
+          }
+
+        }
+
+
+        if(Array.isArray(product.sizes)){
+
+          if(!product.sizes.length){
+
+            throw new Error(
+              "Add at least one size."
+            );
+
+          }
+
+
+          const labels =
+            new Set();
+
+
+          const skus =
+            new Set();
+
+
+          for(const size of product.sizes){
+
+            if(!size.label){
+
+              throw new Error(
+                "Every size must have a size label."
+              );
+
+            }
+
+
+            if(
+              !Number.isFinite(size.price) ||
+              size.price < 0
+            ){
+
+              throw new Error(
+                `Invalid price for size "${size.label}".`
+              );
+
+            }
+
+
+            if(!size.sku){
+
+              throw new Error(
+                `SKU is required for size "${size.label}".`
+              );
+
+            }
+
+
+            const normalizedLabel =
+              size.label.toLowerCase();
+
+
+            const normalizedSKU =
+              size.sku.toUpperCase();
+
+
+            if(labels.has(normalizedLabel)){
+
+              throw new Error(
+                `Duplicate size: ${size.label}`
+              );
+
+            }
+
+
+            if(skus.has(normalizedSKU)){
+
+              throw new Error(
+                `Duplicate size SKU: ${size.sku}`
+              );
+
+            }
+
+
+            labels.add(normalizedLabel);
+            skus.add(normalizedSKU);
+
+          }
+
+        }
+
+
+        /* -----------------------------------------------
+           Check for duplicate SKU in Firestore
+           ----------------------------------------------- */
+
+        const allProducts =
+          await fsListProducts();
+
+
+        const duplicate =
+          allProducts.find(p => {
+
+            if(
+              currentEditId &&
+              String(p.id) === String(currentEditId)
+            ){
+
+              return false;
+
+            }
+
+
+            if(
+              String(p.id) === String(product.id)
+            ){
+
+              return true;
+
+            }
+
+
+            if(
+              p.sku &&
+              String(p.sku).toUpperCase() ===
+              String(product.sku).toUpperCase()
+            ){
+
+              return true;
+
+            }
+
+
+            return false;
+
+          });
+
+
+        if(duplicate){
+
+          if(
+            String(duplicate.id) ===
+            String(product.id)
+          ){
+
+            throw new Error(
+              `A product with the ID "${product.id}" already exists.`
+            );
+
+          }
+
+
+          throw new Error(
+            `The SKU "${product.sku}" is already being used by another product.`
+          );
+
+        }
+
+      }
+
+
+      /* =====================================================
+         SAVE PRODUCT
+         ===================================================== */
+
+      form.addEventListener(
+        "submit",
+        async event => {
+
+          event.preventDefault();
+
+          clearFormError();
+
+
+          const saveBtn =
+            document.getElementById("saveBtn");
+
+
+          saveBtn.disabled = true;
+          saveBtn.textContent = "Saving…";
+
+
+          try{
+
+            const isSizeMode =
+              document
+                .getElementById("modeSizesBtn")
+                .classList
+                .contains("active");
+
+
+            const id =
+              slugify(
+                document
+                  .getElementById("fId")
+                  .value
+              );
+
+
+            const sku =
+              normaliseSKU(
+                document
+                  .getElementById("fSku")
+                  .value
+              );
+
+
+            if(!id){
+
+              throw new Error(
+                "Product ID is required."
+              );
+
+            }
+
+
+            if(!sku){
+
+              throw new Error(
+                "Product SKU is required."
+              );
+
+            }
+
+
+            const product = {
+
+              /* Preserve fields that aren't represented
+                 by the form, especially bundleItems. */
+
+              ...(currentEditingProduct || {}),
+
+              id,
+
+              sku,
+
+              name:
+                document
+                  .getElementById("fName")
+                  .value
+                  .trim(),
+
+              category:
+                document
+                  .getElementById("fCategory")
+                  .value,
+
+              variant:
+                document
+                  .getElementById("fVariant")
+                  .value
+                  .trim() || null,
+
+              includes:
+                document
+                  .getElementById("fIncludes")
+                  .value
+                  .trim() || null,
+
+              desc:
+                document
+                  .getElementById("fDesc")
+                  .value
+                  .trim(),
+
+              bestSeller:
+                document
+                  .getElementById("fBestSeller")
+                  .checked,
+
+              image:
+                uploadedImageUrl || null
+
+            };
+
+
+            /* Preserve original swatch if available. */
+
+            if(!product.swatch){
+
+              const staticProduct =
+                Array.isArray(PRODUCTS)
+                  ? PRODUCTS.find(
+                      p => p.id === currentEditId
+                    )
+                  : null;
+
+
+              product.swatch =
+                staticProduct?.swatch ||
+                "sw1";
+
+            }
+
+
+            if(isSizeMode){
+
+              const rows =
+                [
+                  ...document.querySelectorAll(
+                    ".size-row"
+                  )
+                ]
+                .map(row => ({
+
+                  label:
+                    row
+                      .querySelector(".sz-label")
+                      .value
+                      .trim(),
+
+                  price:
+                    Number(
+                      row
+                        .querySelector(".sz-price")
+                        .value
+                    ),
+
+                  sku:
+                    normaliseSKU(
+                      row
+                        .querySelector(".sz-sku")
+                        .value
+                    )
+
+                }))
+                .filter(row => row.label);
+
+
+              if(!rows.length){
+
+                throw new Error(
+                  "Add at least one size."
+                );
+
+              }
+
+
+              product.sizes = rows;
+
+              product.price = null;
+
+              product.oldPrice = null;
+
+
+            }else{
+
+              const priceValue =
+                document
+                  .getElementById("fPrice")
+                  .value;
+
+
+              const oldPriceValue =
+                document
+                  .getElementById("fOldPrice")
+                  .value;
+
+
+              product.price =
+                priceValue === ""
+                  ? null
+                  : Number(priceValue);
+
+
+              product.oldPrice =
+                oldPriceValue === ""
+                  ? null
+                  : Number(oldPriceValue);
+
+
+              /* Remove old size data when switching
+                 from size-based pricing to flat pricing. */
+
+              delete product.sizes;
+
+            }
+
+
+            await validateProduct(product);
+
+
+            await fsSaveProduct(product);
+
+
+            showToast(
+              currentEditId
+                ? "Product updated successfully."
+                : "Product created successfully."
+            );
+
+
+            closeModal();
+
+            await loadTable();
+
+
+          }catch(error){
+
+            showFormError(
+              getErrorMessage(error)
+            );
+
+          }finally{
+
+            saveBtn.disabled = false;
+            saveBtn.textContent = "Save Product";
+
+          }
+
+        }
+      );
+
+
+      /* =====================================================
+         TABS
+         ===================================================== */
+
+      document
+        .querySelectorAll(".admin-tab")
+        .forEach(tab => {
+
+          tab.addEventListener(
+            "click",
+            async () => {
+
+              document
+                .querySelectorAll(".admin-tab")
+                .forEach(t =>
+                  t.classList.remove("active")
+                );
+
+
+              tab.classList.add("active");
+
+
+              const target =
+                tab.dataset.tab;
+
+
+              document
+                .getElementById("productsPanel")
+                .style.display =
+                  target === "products" ? "block" : "none";
+
+
+              document
+                .getElementById("collectionsPanel")
+                .style.display =
+                  target === "collections" ? "block" : "none";
+
+
+              document
+                .getElementById("sitephotosPanel")
+                .style.display =
+                  target === "sitephotos" ? "block" : "none";
+
+
+              if(target === "collections"){
+
+                await loadCollectionsPanel();
+
+              }
+
+
+              if(target === "sitephotos"){
+
+                await loadSitePhotosPanel();
+
+              }
+
+            }
+          );
+
+        });
+
+
+      /* =====================================================
+         COLLECTIONS PANEL
+         ===================================================== */
+
+      async function loadCollectionsPanel(){
+
+        const grid =
+          document.getElementById(
+            "collAdminGrid"
+          );
+
+
+        grid.innerHTML = `
+          <div class="empty-note">
+            Loading collection images…
+          </div>
+        `;
+
+
+        let imageMap = {};
+
+
+        try{
+
+          imageMap =
+            await fsListCategoryImages();
+
+        }catch(error){
+
+          console.warn(
+            "Could not load category images:",
+            error
+          );
+
+        }
+
+
+        grid.innerHTML =
+          CATEGORIES
+            .map(category => {
+
+              const imageURL =
+                safeImageURL(
+                  imageMap[category.id]
+                );
+
+
+              const thumb =
+                imageURL
+
+                  ? `
+                    <img
+                      class="thumb"
+                      src="${escapeAttribute(imageURL)}"
+                      alt="${escapeAttribute(category.name)}"
+                      loading="lazy"
+                    >
+                  `
+
+                  : `
+                    <div
+                      class="thumb-fallback ${escapeAttribute(category.swatch)}"
+                      aria-label="Using default collection placeholder"
+                    ></div>
+                  `;
+
+
+              return `
+                <div
+                  class="coll-admin-card"
+                  data-cat-card="${escapeAttribute(category.id)}"
+                >
+
+                  ${thumb}
+
+                  <h4>
+                    ${escapeHTML(category.icon)}
+                    ${escapeHTML(category.name)}
+                  </h4>
+
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                    data-cat-input="${escapeAttribute(category.id)}"
+                  >
+
+                  <div
+                    class="status"
+                    data-cat-status="${escapeAttribute(category.id)}"
+                  >
+                    ${
+                      imageURL
+                        ? "Custom photo uploaded"
+                        : "Using placeholder — upload a photo"
+                    }
+                  </div>
+
+                </div>
+              `;
+
+            })
+            .join("");
+
+
+        /* -----------------------------------------------
+           COLLECTION IMAGE UPLOADS
+           ----------------------------------------------- */
+
+        grid
+          .querySelectorAll(
+            'input[type="file"]'
+          )
+          .forEach(input => {
+
+            input.addEventListener(
+              "change",
+              async () => {
+
+                const categoryId =
+                  input.dataset.catInput;
+
+
+                const file =
+                  input.files?.[0];
+
+
+                if(!file){
+                  return;
+                }
+
+
+                const card =
+                  grid.querySelector(
+                    `[data-cat-card="${CSS.escape(categoryId)}"]`
+                  );
+
+
+                const status =
+                  card.querySelector(
+                    `[data-cat-status="${CSS.escape(categoryId)}"]`
+                  );
+
+
+                const maxSize =
+                  10 * 1024 * 1024;
+
+
+                if(file.size > maxSize){
+
+                  input.value = "";
+
+                  status.textContent =
+                    "Image is too large. Maximum size is 10MB.";
+
+                  return;
+
+                }
+
+
+                status.textContent =
+                  "Uploading… 0%";
+
+
+                try{
+
+                  if(
+                    typeof uploadToCloudinary !==
+                    "function"
+                  ){
+
+                    throw new Error(
+                      "Cloudinary upload function is not available."
+                    );
+
+                  }
+
+
+                  const result =
+                    await uploadToCloudinary(
+                      file,
+                      "categories",
+                      pct => {
+
+                        status.textContent =
+                          `Uploading… ${pct}%`;
+
+                      }
+                    );
+
+
+                  if(!result?.secure_url){
+
+                    throw new Error(
+                      "Cloudinary did not return a valid image URL."
+                    );
+
+                  }
+
+
+                  const imageURL =
+                    safeImageURL(
+                      result.secure_url
+                    );
+
+
+                  if(!imageURL){
+
+                    throw new Error(
+                      "The returned image URL is invalid."
+                    );
+
+                  }
+
+
+                  await fsSaveCategoryImage(
+                    categoryId,
+                    imageURL
+                  );
+
+
+                  const oldThumb =
+                    card.querySelector(
+                      ".thumb, .thumb-fallback"
+                    );
+
+
+                  const newThumb =
+                    document.createElement("img");
+
+
+                  newThumb.className =
+                    "thumb";
+
+
+                  newThumb.src =
+                    imageURL;
+
+
+                  newThumb.alt =
+                    getCategory(categoryId)?.name ||
+                    "Collection";
+
+
+                  newThumb.loading =
+                    "lazy";
+
+
+                  oldThumb.replaceWith(
+                    newThumb
+                  );
+
+
+                  status.textContent =
+                    "✓ Custom photo uploaded";
+
+
+                  input.value = "";
+
+
+                  showToast(
+                    "Collection image updated successfully."
+                  );
+
+
+                }catch(error){
+
+                  status.textContent =
+                    "Upload failed — " +
+                    getErrorMessage(error);
+
+
+                  input.value = "";
+
+                  showToast(
+                    getErrorMessage(error),
+                    "error"
+                  );
+
+                }
+
+              }
+            );
+
+          });
+
+      }
+
+
+      /* =====================================================
+         SITE PHOTOS PANEL (hero + Instagram gallery)
+         ===================================================== */
+
+      async function loadSitePhotosPanel(){
+
+        /* ---------- hero photo ---------- */
+
+        const heroImg =
+          document.getElementById("heroThumbPreview");
+
+        const heroFallback =
+          document.getElementById("heroThumbFallback");
+
+        const heroStatus =
+          document.getElementById("heroUploadStatus");
+
+        const heroInput =
+          document.getElementById("heroImageInput");
+
+
+        heroStatus.textContent =
+          "Loading current photo…";
+
+
+        try{
+
+          if(typeof fsGetHeroImage !== "function"){
+            throw new Error(
+              "fsGetHeroImage() is unavailable. Check js/products-service.js."
+            );
+          }
+
+          const heroUrl =
+            safeImageURL(await fsGetHeroImage());
+
+
+          if(heroUrl){
+
+            heroImg.src = heroUrl;
+            heroImg.style.display = "block";
+            heroFallback.style.display = "none";
+
+            heroStatus.textContent =
+              "Custom hero photo uploaded";
+
+          }else{
+
+            heroImg.style.display = "none";
+            heroFallback.style.display = "block";
+
+            heroStatus.textContent =
+              "Using the default hero photo — upload one to replace it";
+
+          }
+
+        }catch(error){
+
+          heroStatus.textContent =
+            "Could not load current hero photo — " +
+            getErrorMessage(error);
+
+        }
+
+
+        heroInput.onchange = async () => {
+
+          const file = heroInput.files?.[0];
+          if(!file) return;
+
+          const maxSize = 10 * 1024 * 1024;
+
+          if(file.size > maxSize){
+            heroInput.value = "";
+            heroStatus.textContent =
+              "Image is too large. Maximum size is 10MB.";
+            return;
+          }
+
+          heroStatus.textContent = "Uploading… 0%";
+
+          try{
+
+            if(typeof uploadToCloudinary !== "function"){
+              throw new Error(
+                "Cloudinary upload function is not available."
+              );
+            }
+
+            const result =
+              await uploadToCloudinary(
+                file,
+                "site",
+                pct => {
+                  heroStatus.textContent = `Uploading… ${pct}%`;
+                }
+              );
+
+            const imageURL =
+              safeImageURL(result?.secure_url);
+
+            if(!imageURL){
+              throw new Error(
+                "The returned image URL is invalid."
+              );
+            }
+
+            if(typeof fsSaveHeroImage !== "function"){
+              throw new Error(
+                "fsSaveHeroImage() is unavailable. Check js/products-service.js."
+              );
+            }
+
+            await fsSaveHeroImage(imageURL);
+
+            heroImg.src = imageURL;
+            heroImg.style.display = "block";
+            heroFallback.style.display = "none";
+            heroStatus.textContent = "✓ Custom hero photo uploaded";
+            heroInput.value = "";
+
+            showToast("Hero photo updated successfully.");
+
+          }catch(error){
+
+            heroStatus.textContent =
+              "Upload failed — " + getErrorMessage(error);
+
+            heroInput.value = "";
+
+            showToast(getErrorMessage(error), "error");
+
+          }
+
+        };
+
+
+        /* ---------- Instagram / lifestyle gallery ---------- */
+
+        const galleryGrid =
+          document.getElementById("galleryAdminGrid");
+
+        galleryGrid.innerHTML = `
+          <div class="empty-note">
+            Loading gallery photos…
+          </div>
+        `;
+
+        let galleryItems = [];
+
+        try{
+
+          if(typeof fsListGalleryImages !== "function"){
+            throw new Error(
+              "fsListGalleryImages() is unavailable. Check js/products-service.js."
+            );
+          }
+
+          galleryItems = await fsListGalleryImages();
+
+        }catch(error){
+
+          console.warn(
+            "Could not load gallery images:",
+            error
+          );
+
+        }
+
+
+        function renderGalleryGrid(){
+
+          if(!galleryItems.length){
+
+            galleryGrid.innerHTML = `
+              <div class="empty-note">
+                No gallery photos yet — click "+ Add Photo"
+                to upload your first one.
+              </div>
+            `;
+
+            return;
+
+          }
+
+          galleryGrid.innerHTML =
+            galleryItems
+              .map(item => `
+                <div class="coll-admin-card" data-gallery-card="${escapeAttribute(item.id)}">
+                  <img
+                    class="thumb"
+                    src="${escapeAttribute(safeImageURL(item.image) || "")}"
+                    alt="Gallery photo"
+                    loading="lazy"
+                  >
+                  <div class="status">
+                    Photo ${escapeHTML(String(item.order != null ? item.order + 1 : ""))}
+                  </div>
+                  <button
+                    type="button"
+                    class="btn btn-outline-dark"
+                    data-remove-gallery="${escapeAttribute(item.id)}"
+                    style="margin-top:10px; padding:8px 14px; font-size:10.5px; width:100%;"
+                  >
+                    Remove
+                  </button>
+                </div>
+              `)
+              .join("");
+
+
+          galleryGrid
+            .querySelectorAll("[data-remove-gallery]")
+            .forEach(button => {
+
+              button.addEventListener(
+                "click",
+                async () => {
+
+                  const id = button.dataset.removeGallery;
+
+                  button.disabled = true;
+                  button.textContent = "Removing…";
+
+                  try{
+
+                    if(typeof fsDeleteGalleryImage !== "function"){
+                      throw new Error(
+                        "fsDeleteGalleryImage() is unavailable."
+                      );
+                    }
+
+                    await fsDeleteGalleryImage(id);
+
+                    galleryItems =
+                      galleryItems.filter(
+                        g => g.id !== id
+                      );
+
+                    renderGalleryGrid();
+
+                    showToast("Gallery photo removed.");
+
+                  }catch(error){
+
+                    showToast(
+                      getErrorMessage(error),
+                      "error"
+                    );
+
+                    button.disabled = false;
+                    button.textContent = "Remove";
+
+                  }
+
+                }
+              );
+
+            });
+
+        }
+
+        renderGalleryGrid();
+
+
+        document.getElementById("addGalleryPhotoBtn").onclick = () => {
+
+          if(galleryItems.length >= 8){
+
+            showToast(
+              "You can have up to 8 gallery photos. Remove one first.",
+              "error"
+            );
+
+            return;
+
+          }
+
+          const tempInput =
+            document.createElement("input");
+
+          tempInput.type = "file";
+          tempInput.accept =
+            "image/jpeg,image/png,image/webp,image/gif";
+
+          tempInput.onchange = async () => {
+
+            const file = tempInput.files?.[0];
+            if(!file) return;
+
+            const maxSize = 10 * 1024 * 1024;
+
+            if(file.size > maxSize){
+
+              showToast(
+                "Image is too large. Maximum size is 10MB.",
+                "error"
+              );
+
+              return;
+
+            }
+
+            showToast("Uploading photo…");
+
+            try{
+
+              if(typeof uploadToCloudinary !== "function"){
+                throw new Error(
+                  "Cloudinary upload function is not available."
+                );
+              }
+
+              const result =
+                await uploadToCloudinary(
+                  file,
+                  "gallery",
+                  () => {}
+                );
+
+              const imageURL =
+                safeImageURL(result?.secure_url);
+
+              if(!imageURL){
+                throw new Error(
+                  "The returned image URL is invalid."
+                );
+              }
+
+              if(typeof fsSaveGalleryImage !== "function"){
+                throw new Error(
+                  "fsSaveGalleryImage() is unavailable."
+                );
+              }
+
+              const id = "gallery_" + Date.now();
+              const order = galleryItems.length;
+
+              await fsSaveGalleryImage(id, imageURL, order);
+
+              galleryItems.push({ id, image: imageURL, order });
+
+              renderGalleryGrid();
+
+              showToast("Gallery photo added.");
+
+            }catch(error){
+
+              showToast(
+                getErrorMessage(error),
+                "error"
+              );
+
+            }
+
+          };
+
+          tempInput.click();
+
+        };
+
+      }
+
+
+      /* =====================================================
+         INITIAL LOAD
+         ===================================================== */
+
+      await loadTable();
+
+    }
+
+  })();
+
+})();
+</script>
+
+</body>
+</html>

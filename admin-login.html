@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Login — COZY-LUXE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500,700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body{min-height:100vh; display:flex; align-items:center; justify-content:center; background:var(--espresso);}
+  .login-card{background:var(--white); width:100%; max-width:380px; padding:48px 40px; text-align:center;}
+  .login-card img{height:60px; margin:0 auto 24px;}
+  .login-card h1{font-size:20px; margin-bottom:6px;}
+  .login-card p.sub{font-size:13px; color:var(--muted); margin-bottom:30px;}
+  .login-error{background:rgba(178,75,60,0.1); color:var(--danger); font-size:12.5px; padding:12px 14px; margin-bottom:18px; display:none; text-align:left;}
+  .login-error.show{display:block;}
+  .config-warning{background:rgba(200,164,90,0.12); color:var(--gold-deep); font-size:11.5px; padding:12px 14px; margin-top:24px; text-align:left; line-height:1.6; display:none;}
+  .config-warning.show{display:block;}
+</style>
+</head>
+<body>
+
+<div class="login-card">
+  <img src="images/logo2.png" alt="COZY-LUXE">
+  <h1>Admin Login</h1>
+  <p class="sub">Sign in to manage the COZY-LUXE catalog.</p>
+
+  <div class="login-error" id="loginError"></div>
+
+  <form id="loginForm">
+    <div class="form-group" style="text-align:left;">
+      <label>Email</label>
+      <input type="email" id="email" required autocomplete="username">
+    </div>
+    <div class="form-group" style="text-align:left;">
+      <label>Password</label>
+      <input type="password" id="password" required autocomplete="current-password">
+    </div>
+    <button type="submit" class="btn btn-dark btn-block" id="loginBtn">Sign In</button>
+  </form>
+
+  <div class="config-warning" id="configWarning">
+    Firebase isn't configured yet. Add your project credentials to
+    <code>js/firebase-config.js</code> and create an admin user under
+    Authentication → Users in the Firebase console before signing in.
+  </div>
+</div>
+
+<script type="module" src="js/firebase-init.js?v=1787345207"></script>
+<script>
+  function waitForFb(){
+    return new Promise(resolve => {
+      if (window.fb) return resolve(window.fb);
+      window.addEventListener("firebase-ready", () => resolve(window.fb), { once:true });
+      setTimeout(() => resolve(window.fb || null), 2500);
+    });
+  }
+
+  (async function(){
+    const fb = await waitForFb();
+    const errorBox = document.getElementById("loginError");
+    const warningBox = document.getElementById("configWarning");
+
+    if (!fb || !fb.auth){
+      warningBox.classList.add("show");
+      document.getElementById("loginBtn").disabled = true;
+      return;
+    }
+
+    // already signed in? go straight to the dashboard.
+    fb.onAuthStateChanged(fb.auth, (user) => {
+      if (user && fb.ADMIN_EMAILS.includes(user.email)){
+        window.location.href = "admin-dashboard.html";
+      }
+    });
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorBox.classList.remove("show");
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const btn = document.getElementById("loginBtn");
+      btn.disabled = true; btn.textContent = "Signing in…";
+      try{
+        const cred = await fb.signInWithEmailAndPassword(fb.auth, email, password);
+        if (!fb.ADMIN_EMAILS.includes(cred.user.email)){
+          await fb.signOut(fb.auth);
+          throw new Error("This account isn't authorized for the admin dashboard.");
+        }
+        window.location.href = "admin-dashboard.html";
+      }catch(err){
+        errorBox.textContent = err.message || "Sign in failed. Check your email and password.";
+        errorBox.classList.add("show");
+        btn.disabled = false; btn.textContent = "Sign In";
+      }
+    });
+  })();
+</script>
+</body>
+</html>
