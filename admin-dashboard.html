@@ -257,6 +257,14 @@
     line-height:1.5;
   }
 
+  .coll-admin-card .post-link{
+    display:block;
+    font-size:10.5px;
+    color:var(--gold-deep);
+    margin-top:6px;
+    word-break:break-all;
+  }
+
   /* Modal */
   .modal-backdrop{
     position:fixed;
@@ -670,7 +678,7 @@
         <h3 style="font-size:15px;">Instagram / Lifestyle Gallery</h3>
         <button class="btn btn-outline-dark" id="addGalleryPhotoBtn" type="button" style="padding:8px 16px; font-size:11px;">+ Add Photo</button>
       </div>
-      <p style="font-size:12.5px; color:var(--muted); margin-bottom:18px;">Shown in the "Follow Our Journey @cozyluxebeddings" section on the homepage. Add up to 8 photos.</p>
+      <p style="font-size:12.5px; color:var(--muted); margin-bottom:18px;">Each tile shows a photo and links to the specific Instagram post you made for it. Post it to Instagram first, then come back here with the post's link. Add up to 8 photos.</p>
       <div class="coll-admin-grid" id="galleryAdminGrid"></div>
     </div>
 
@@ -3375,6 +3383,14 @@
                   <div class="status">
                     Photo ${escapeHTML(String(item.order != null ? item.order + 1 : ""))}
                   </div>
+                  <a
+                    class="post-link"
+                    href="${escapeAttribute(item.postUrl || "#")}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View Post ↗
+                  </a>
                   <button
                     type="button"
                     class="btn btn-outline-dark"
@@ -3455,6 +3471,27 @@
 
           }
 
+          const postUrl = window.prompt(
+            "Paste the Instagram post URL for this photo (e.g. https://www.instagram.com/p/ABC123/):"
+          );
+
+          if(postUrl === null){
+            return; // cancelled
+          }
+
+          const cleanPostUrl = postUrl.trim();
+
+          if(!/^https:\/\/(www\.)?instagram\.com\//i.test(cleanPostUrl)){
+
+            showToast(
+              "That doesn't look like a valid Instagram URL. Try again.",
+              "error"
+            );
+
+            return;
+
+          }
+
           const tempInput =
             document.createElement("input");
 
@@ -3515,9 +3552,9 @@
               const id = "gallery_" + Date.now();
               const order = galleryItems.length;
 
-              await fsSaveGalleryImage(id, imageURL, order);
+              await fsSaveGalleryImage(id, imageURL, cleanPostUrl, order);
 
-              galleryItems.push({ id, image: imageURL, order });
+              galleryItems.push({ id, image: imageURL, postUrl: cleanPostUrl, order });
 
               renderGalleryGrid();
 
