@@ -89,6 +89,51 @@ nav.main-nav a.active{color:var(--gold-deep); border-color:var(--gold);}
   transform:scale(1.06);
 }
 
+/* ---------- mobile menu (hamburger + slide-down nav panel) ---------- */
+/* Hidden by default (desktop). Only .menu-toggle's display flips to
+   flex below 1000px, inside the media query further down this file. */
+.menu-toggle{
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  gap:5px;
+  width:24px;
+  height:20px;
+  background:none;
+  border:none;
+  cursor:pointer;
+  padding:0;
+  flex-shrink:0;
+}
+.menu-toggle span{
+  display:block;
+  width:100%;
+  height:2px;
+  background:var(--espresso);
+  transition:transform .25s ease, opacity .25s ease;
+}
+.menu-toggle.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+.menu-toggle.open span:nth-child(2){ opacity:0; }
+.menu-toggle.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+.mobile-nav{
+  display:none;
+  flex-direction:column;
+  background:var(--white);
+  border-bottom:1px solid var(--line);
+}
+.mobile-nav a{
+  padding:16px 5vw;
+  border-bottom:1px solid var(--line);
+  font-size:13px;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  font-weight:700;
+  color:var(--espresso);
+}
+.mobile-nav a:last-child{ border-bottom:none; }
+.mobile-nav.open{ display:flex; }
+
 /* ---------- buttons ---------- */
 .btn{
   padding:15px 28px; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; font-weight:700;
@@ -276,6 +321,7 @@ footer p.desc{font-size:12.5px; line-height:1.7; max-width:230px; margin-bottom:
 
 @media(max-width:1000px){
   nav.main-nav, .utility-bar .right{display:none;}
+  .menu-toggle{display:flex;}
   .collections-grid{grid-template-columns:repeat(2,1fr);}
   .products-grid{grid-template-columns:repeat(2,1fr);}
   .products-grid.cols-6{grid-template-columns:repeat(2,1fr);}
@@ -284,52 +330,4 @@ footer p.desc{font-size:12.5px; line-height:1.7; max-width:230px; margin-bottom:
   .footer-grid{grid-template-columns:1fr 1fr;}
   .form-row{grid-template-columns:1fr;}
   section{padding:60px 5vw;}
-  /* Hamburger button — hidden on desktop */
-.menu-toggle{
-  display:none;
-  flex-direction:column;
-  justify-content:center;
-  gap:5px;
-  width:24px;
-  height:20px;
-  background:none;
-  border:none;
-  cursor:pointer;
-  padding:0;
-  flex-shrink:0;
-}
-.menu-toggle span{
-  display:block;
-  width:100%;
-  height:2px;
-  background:var(--espresso);
-  transition:transform .25s ease, opacity .25s ease;
-}
-.menu-toggle.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
-.menu-toggle.open span:nth-child(2){ opacity:0; }
-.menu-toggle.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
-
-/* Mobile nav panel — hidden until toggled open */
-.mobile-nav{
-  display:none;
-  flex-direction:column;
-  background:var(--white);
-  border-bottom:1px solid var(--line);
-}
-.mobile-nav a{
-  padding:16px 5vw;
-  border-bottom:1px solid var(--line);
-  font-size:13px;
-  letter-spacing:0.06em;
-  text-transform:uppercase;
-  font-weight:700;
-  color:var(--espresso);
-}
-.mobile-nav a:last-child{ border-bottom:none; }
-.mobile-nav.open{ display:flex; }
-
-@media(max-width:1000px){
-  nav.main-nav{ display:none; }
-  .menu-toggle{ display:flex; }
-}
 }

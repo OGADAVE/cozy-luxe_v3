@@ -816,7 +816,16 @@ async function fsSaveHeroImage(imageUrl){
    Firestore:
 
    gallery/
-      {autoId}   { image: "https://...", order: 0, updatedAt: "..." }
+      {autoId}   {
+        image: "https://res.cloudinary.com/...",   <- the thumbnail photo
+        postUrl: "https://www.instagram.com/p/...", <- the actual IG post
+        order: 0,
+        updatedAt: "..."
+      }
+
+   Each gallery tile shows a photo you upload AND links out to the
+   specific Instagram post you made for it — so a click opens that
+   exact post, not just your profile.
    =================================================== */
 
 
@@ -873,8 +882,14 @@ async function fsListGalleryImages(){
 
 /**
  * Save (create or update) a gallery photo.
+ *
+ * @param {string} id        Firestore doc id for this tile
+ * @param {string} imageUrl  Cloudinary thumbnail image URL
+ * @param {string} postUrl   The Instagram post this tile links to
+ *                           (e.g. https://www.instagram.com/p/ABC123/)
+ * @param {number} order     Display order (0-based)
  */
-async function fsSaveGalleryImage(id, imageUrl, order){
+async function fsSaveGalleryImage(id, imageUrl, postUrl, order){
 
   const fb =
     await waitForFirebase();
@@ -902,6 +917,22 @@ async function fsSaveGalleryImage(id, imageUrl, order){
 
     throw new Error(
       "Image URL is required."
+    );
+
+  }
+
+
+  const cleanPostUrl =
+    String(postUrl || "").trim();
+
+
+  if(
+    !cleanPostUrl ||
+    !/^https:\/\/(www\.)?instagram\.com\//i.test(cleanPostUrl)
+  ){
+
+    throw new Error(
+      "Enter a valid Instagram post URL (e.g. https://www.instagram.com/p/ABC123/)."
     );
 
   }
@@ -947,6 +978,9 @@ async function fsSaveGalleryImage(id, imageUrl, order){
 
       image:
         parsedUrl.href,
+
+      postUrl:
+        cleanPostUrl,
 
       order:
         Number(order) || 0,

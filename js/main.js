@@ -8,6 +8,7 @@
    • Toasts
    • WhatsApp
    • Newsletter
+   • Mobile menu
    • Homepage collections
    • Homepage best sellers
    • Firestore product initialization
@@ -44,17 +45,120 @@ function escapeHTML(value){
 
 }
 
-function initMobileMenu(){
-  const toggle = document.getElementById("menuToggle");
-  const nav = document.getElementById("mobileNav");
-  if(!toggle || !nav) return;
 
-  toggle.addEventListener("click", () => {
-    const isOpen = nav.classList.toggle("open");
+/* ===================================================
+   MOBILE MENU
+   ---------------------------------------------------
+   Wires up #menuToggle / #mobileNav on any page that has
+   them. Opens/closes on click, closes on Escape, closes
+   when a link inside the panel is tapped, closes when the
+   user taps outside it, and closes automatically if the
+   window is resized back past the desktop breakpoint.
+   =================================================== */
+
+function initMobileMenu(){
+
+  const toggle =
+    document.getElementById("menuToggle");
+
+  const nav =
+    document.getElementById("mobileNav");
+
+
+  if(!toggle || !nav){
+    return;
+  }
+
+
+  function closeMobileMenu(){
+
+    nav.classList.remove("open");
+    toggle.classList.remove("open");
+    toggle.setAttribute("aria-expanded", "false");
+
+  }
+
+
+  function toggleMobileMenu(){
+
+    const isOpen =
+      nav.classList.toggle("open");
+
     toggle.classList.toggle("open", isOpen);
-    toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
-  });
+    toggle.setAttribute(
+      "aria-expanded",
+      isOpen ? "true" : "false"
+    );
+
+  }
+
+
+  toggle.addEventListener(
+    "click",
+    event => {
+
+      event.stopPropagation();
+      toggleMobileMenu();
+
+    }
+  );
+
+
+  nav
+    .querySelectorAll("a")
+    .forEach(link => {
+
+      link.addEventListener(
+        "click",
+        closeMobileMenu
+      );
+
+    });
+
+
+  document.addEventListener(
+    "keydown",
+    event => {
+
+      if(event.key === "Escape"){
+        closeMobileMenu();
+      }
+
+    }
+  );
+
+
+  document.addEventListener(
+    "click",
+    event => {
+
+      const clickedInsideNav =
+        nav.contains(event.target);
+
+      const clickedToggle =
+        toggle.contains(event.target);
+
+      if(!clickedInsideNav && !clickedToggle){
+        closeMobileMenu();
+      }
+
+    }
+  );
+
+
+  window.addEventListener(
+    "resize",
+    () => {
+
+      if(window.innerWidth > 1000){
+        closeMobileMenu();
+      }
+
+    }
+  );
+
 }
+
 
 /* ===================================================
    CART
@@ -1145,6 +1249,8 @@ document.addEventListener(
   async () => {
 
     initHeader();
+
+    initMobileMenu();
 
     initNewsletterForms();
 
