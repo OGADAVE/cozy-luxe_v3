@@ -8,49 +8,63 @@
    • Product images
    • Best seller flags
    • Collection/category images
+   • Homepage hero image
+   • Instagram/lifestyle gallery
    • Firestore → storefront synchronization
+   • Order tracking
 
    Cloudinary stores actual image files.
-
    Firestore stores Cloudinary secure URLs.
+
+   Firestore collections:
+
+   products/
+   categoryImages/
+   site/
+   gallery/
+   orders/
+
    =================================================== */
 
 "use strict";
-
 
 /* ===================================================
    FIREBASE READY
    =================================================== */
 
-function waitForFirebase(timeoutMs = 8000){
+function waitForFirebase(timeoutMs = 8000) {
 
   return new Promise(resolve => {
 
-    if(
+    /* Firebase is already ready */
+    if (
       window.fb &&
       window.fb.db
-    ){
+    ) {
 
       resolve(window.fb);
       return;
 
     }
 
+
     let finished = false;
 
 
-    function finish(value){
+    function finish(value) {
 
-      if(finished){
+      if (finished) {
         return;
       }
 
       finished = true;
+
       resolve(value);
 
     }
 
 
+    /* Listen for Firebase initialization */
     window.addEventListener(
       "firebase-ready",
       () => {
@@ -68,20 +82,69 @@ function waitForFirebase(timeoutMs = 8000){
     );
 
 
-    setTimeout(
-      () => {
+    /* Fallback timeout */
+    setTimeout(() => {
 
-        finish(
-          window.fb?.db
-            ? window.fb
-            : null
-        );
+      finish(
+        window.fb?.db
+          ? window.fb
+          : null
+      );
 
-      },
-      timeoutMs
-    );
+    }, timeoutMs);
 
   });
+
+}
+
+
+/* ===================================================
+   FIRESTORE DATA CLEANER
+   ---------------------------------------------------
+   Firestore rejects undefined values by default.
+
+   This helper removes undefined values before data
+   is written to Firestore.
+   =================================================== */
+
+function cleanFirestoreData(value) {
+
+  if (Array.isArray(value)) {
+
+    return value
+      .filter(item => item !== undefined)
+      .map(item => cleanFirestoreData(item));
+
+  }
+
+
+  if (
+    value &&
+    typeof value === "object" &&
+    !(value instanceof Date)
+  ) {
+
+    const cleaned = {};
+
+    Object.entries(value).forEach(
+      ([key, item]) => {
+
+        if (item !== undefined) {
+
+          cleaned[key] =
+            cleanFirestoreData(item);
+
+        }
+
+      }
+    );
+
+    return cleaned;
+
+  }
+
+
+  return value;
 
 }
 
@@ -94,13 +157,13 @@ function waitForFirebase(timeoutMs = 8000){
 /**
  * Load all products from Firestore.
  */
-async function fsListProducts(){
+async function fsListProducts() {
 
   const fb =
     await waitForFirebase();
 
 
-  if(!fb?.db){
+  if (!fb?.db) {
 
     throw new Error(
       "Firebase is not available."
@@ -143,20 +206,13 @@ async function fsListProducts(){
 }
 
 
-/**
- * Save/update product.
- *
- * IMPORTANT:
- * merge:true prevents accidental deletion
- * of fields that may already exist in Firestore.
- */
-async function fsSaveProduct(product){
+async function fsSaveProduct(product) {
 
   const fb =
     await waitForFirebase();
 
 
-  if(!fb?.db){
+  if (!fb?.db) {
 
     throw new Error(
       "Firebase is not available."
@@ -165,10 +221,10 @@ async function fsSaveProduct(product){
   }
 
 
-  if(
+  if (
     !product ||
     !product.id
-  ){
+  ) {
 
     throw new Error(
       "Product ID is required."
@@ -178,19 +234,41 @@ async function fsSaveProduct(product){
 
 
   const id =
-    String(product.id);
+    String(product.id).trim();
+
+
+  if (!id) {
+
+    throw new Error(
+      "Product ID is required."
+    );
+
+  }
 
 
   const productData = {
-
-    ...product,
-
-    id: undefined
-
+    ...product
   };
 
 
+  /* ID is stored as the Firestore document ID,
+     not duplicated inside the document. */
+
   delete productData.id;
+
+
+  const cleanedData =
+    cleanFirestoreData(productData);
+
+
+  const dataToSave = {
+
+    ...cleanedData,
+
+    updatedAt:
+      new Date().toISOString()
+
+  };
 
 
   await fb.setDoc(
@@ -201,19 +279,10 @@ async function fsSaveProduct(product){
       id
     ),
 
-    {
-
-      ...productData,
-
-      updatedAt:
-        new Date().toISOString()
-
-    },
+    dataToSave,
 
     {
-
       merge: true
-
     }
 
   );
@@ -223,7 +292,7 @@ async function fsSaveProduct(product){
 
     id,
 
-    ...productData
+    ...cleanedData
 
   };
 
@@ -233,13 +302,13 @@ async function fsSaveProduct(product){
 /**
  * Delete product.
  */
-async function fsDeleteProduct(id){
+async function fsDeleteProduct(id) {
 
   const fb =
     await waitForFirebase();
 
 
-  if(!fb?.db){
+  if (!fb?.db) {
 
     throw new Error(
       "Firebase is not available."
@@ -248,7 +317,7 @@ async function fsDeleteProduct(id){
   }
 
 
-  if(!id){
+  if (!id) {
 
     throw new Error(
       "Product ID is required."
@@ -262,7 +331,7 @@ async function fsDeleteProduct(id){
     fb.doc(
       fb.db,
       "products",
-      String(id)
+      String(id).trim()
     )
 
   );
@@ -276,20 +345,18 @@ async function fsDeleteProduct(id){
 
 
 /**
- * Set/unset bestseller status.
- *
- * This is useful for the admin dashboard.
+ * Set or unset bestseller status.
  */
 async function fsSetBestSeller(
   productId,
   isBestSeller
-){
+) {
 
   const fb =
     await waitForFirebase();
 
 
-  if(!fb?.db){
+  if (!fb?.db) {
 
     throw new Error(
       "Firebase is not available."
@@ -298,7 +365,7 @@ async function fsSetBestSeller(
   }
 
 
-  if(!productId){
+  if (!productId) {
 
     throw new Error(
       "Product ID is required."
@@ -307,12 +374,16 @@ async function fsSetBestSeller(
   }
 
 
+  const id =
+    String(productId).trim();
+
+
   await fb.setDoc(
 
     fb.doc(
       fb.db,
       "products",
-      String(productId)
+      id
     ),
 
     {
@@ -326,9 +397,7 @@ async function fsSetBestSeller(
     },
 
     {
-
       merge: true
-
     }
 
   );
@@ -343,33 +412,13 @@ async function fsSetBestSeller(
    CATEGORY / COLLECTION IMAGES
    =================================================== */
 
-
-/**
- * Load all collection images.
- *
- * Firestore:
- *
- * categoryImages/
- *    bedsheets
- *    complete
- *    pillows
- *    etc.
- *
- * Each document:
- *
- * {
- *   categoryId: "bedsheets",
- *   image: "https://res.cloudinary.com/...",
- *   updatedAt: "..."
- * }
- */
-async function fsListCategoryImages(){
+async function fsListCategoryImages() {
 
   const fb =
     await waitForFirebase();
 
 
-  if(!fb?.db){
+  if (!fb?.db) {
 
     throw new Error(
       "Firebase is not available."
@@ -380,10 +429,12 @@ async function fsListCategoryImages(){
 
   const snapshot =
     await fb.getDocs(
+
       fb.collection(
         fb.db,
         "categoryImages"
       )
+
     );
 
 
@@ -402,14 +453,22 @@ async function fsListCategoryImages(){
         : "";
 
 
-    if(image){
+    if (!image) {
+      return;
+    }
 
-      imageMap[
-        String(
-          data.categoryId ||
-          docSnap.id
-        )
-      ] = image;
+
+    const categoryId =
+      String(
+        data.categoryId ||
+        docSnap.id
+      ).trim();
+
+
+    if (categoryId) {
+
+      imageMap[categoryId] =
+        image;
 
     }
 
@@ -427,13 +486,13 @@ async function fsListCategoryImages(){
 async function fsSaveCategoryImage(
   categoryId,
   imageUrl
-){
+) {
 
   const fb =
     await waitForFirebase();
 
 
-  if(!fb?.db){
+  if (!fb?.db) {
 
     throw new Error(
       "Firebase is not available."
@@ -442,7 +501,7 @@ async function fsSaveCategoryImage(
   }
 
 
-  if(!categoryId){
+  if (!categoryId) {
 
     throw new Error(
       "Collection category ID is required."
@@ -451,7 +510,7 @@ async function fsSaveCategoryImage(
   }
 
 
-  if(!imageUrl){
+  if (!imageUrl) {
 
     throw new Error(
       "Image URL is required."
@@ -460,38 +519,24 @@ async function fsSaveCategoryImage(
   }
 
 
-  let parsedUrl;
+  const id =
+    String(categoryId).trim();
 
 
-  try{
-
-    parsedUrl =
-      new URL(
-        String(imageUrl).trim()
-      );
-
-  }catch{
+  if (!id) {
 
     throw new Error(
+      "Collection category ID is required."
+    );
+
+  }
+
+
+  const parsedUrl =
+    validateHttpsUrl(
+      imageUrl,
       "The Cloudinary image URL is invalid."
     );
-
-  }
-
-
-  if(
-    parsedUrl.protocol !== "https:"
-  ){
-
-    throw new Error(
-      "Only secure HTTPS image URLs are allowed."
-    );
-
-  }
-
-
-  const id =
-    String(categoryId);
 
 
   await fb.setDoc(
@@ -515,9 +560,7 @@ async function fsSaveCategoryImage(
     },
 
     {
-
       merge: true
-
     }
 
   );
@@ -533,13 +576,13 @@ async function fsSaveCategoryImage(
  */
 async function fsDeleteCategoryImage(
   categoryId
-){
+) {
 
   const fb =
     await waitForFirebase();
 
 
-  if(!fb?.db){
+  if (!fb?.db) {
 
     throw new Error(
       "Firebase is not available."
@@ -548,7 +591,7 @@ async function fsDeleteCategoryImage(
   }
 
 
-  if(!categoryId){
+  if (!categoryId) {
 
     throw new Error(
       "Collection category ID is required."
@@ -562,7 +605,7 @@ async function fsDeleteCategoryImage(
     fb.doc(
       fb.db,
       "categoryImages",
-      String(categoryId)
+      String(categoryId).trim()
     )
 
   );
@@ -571,28 +614,62 @@ async function fsDeleteCategoryImage(
 
 
 /* ===================================================
+   URL VALIDATION
+   =================================================== */
+
+function validateHttpsUrl(
+  value,
+  errorMessage = "Invalid HTTPS URL."
+) {
+
+  let parsedUrl;
+
+
+  try {
+
+    parsedUrl =
+      new URL(
+        String(value).trim()
+      );
+
+  } catch {
+
+    throw new Error(
+      errorMessage
+    );
+
+  }
+
+
+  if (
+    parsedUrl.protocol !== "https:"
+  ) {
+
+    throw new Error(
+      "Only secure HTTPS image URLs are allowed."
+    );
+
+  }
+
+
+  return parsedUrl;
+
+}
+
+
+/* ===================================================
    STATIC CATALOG → FIRESTORE
    =================================================== */
 
+async function initProducts() {
 
-/**
- * Load products from Firestore.
- *
- * If Firestore contains products:
- *     Firestore becomes the active catalog.
- *
- * If Firestore is empty/unavailable:
- *     static data.js remains active.
- */
-async function initProducts(){
-
-  try{
+  try {
 
     const fb =
       await waitForFirebase();
 
 
-    if(!fb?.db){
+    if (!fb?.db) {
 
       console.info(
         "COZY-LUXE: Firebase unavailable. Using static catalog."
@@ -607,19 +684,10 @@ async function initProducts(){
       await fsListProducts();
 
 
-    /*
-     * IMPORTANT:
-     *
-     * Only replace the static catalog if Firestore
-     * actually contains products.
-     *
-     * This prevents an empty Firestore collection
-     * from blanking the entire website.
-     */
-    if(
+    if (
       Array.isArray(firestoreProducts) &&
-      firestoreProducts.length
-    ){
+      firestoreProducts.length > 0
+    ) {
 
       PRODUCTS.length = 0;
 
@@ -632,7 +700,7 @@ async function initProducts(){
         `COZY-LUXE: Loaded ${PRODUCTS.length} products from Firestore.`
       );
 
-    }else{
+    } else {
 
       console.info(
         "COZY-LUXE: Firestore products collection is empty. Using static catalog."
@@ -640,12 +708,14 @@ async function initProducts(){
 
     }
 
-
-  }catch(error){
+  } catch (error) {
 
     console.warn(
+
       "COZY-LUXE: Could not load products from Firestore. Using static catalog.",
+
       error
+
     );
 
   }
@@ -662,21 +732,19 @@ async function initProducts(){
    Firestore:
 
    site/
-      hero   { image: "https://res.cloudinary.com/...", updatedAt: "..." }
+      hero {
+        image: "https://res.cloudinary.com/...",
+        updatedAt: "..."
+      }
    =================================================== */
 
-
-/**
- * Load the current homepage hero photo URL (or null if
- * none has been uploaded yet).
- */
-async function fsGetHeroImage(){
+async function fsGetHeroImage() {
 
   const fb =
     await waitForFirebase();
 
 
-  if(!fb?.db){
+  if (!fb?.db) {
 
     throw new Error(
       "Firebase is not available."
@@ -685,54 +753,52 @@ async function fsGetHeroImage(){
   }
 
 
-  const docSnap =
-    await fb.getDocs(
-      fb.collection(
-        fb.db,
-        "site"
-      )
+  const heroRef =
+    fb.doc(
+      fb.db,
+      "site",
+      "hero"
     );
 
 
-  let image = null;
+  const docSnap =
+    await fb.getDoc(heroRef);
 
 
-  docSnap.forEach(entry => {
+  if (!docSnap.exists()) {
 
-    if(entry.id === "hero"){
+    return null;
 
-      const data =
-        entry.data() || {};
-
-      const value =
-        typeof data.image === "string"
-          ? data.image.trim()
-          : "";
-
-      if(value){
-        image = value;
-      }
-
-    }
-
-  });
+  }
 
 
-  return image;
+  const data =
+    docSnap.data() || {};
+
+
+  const image =
+    typeof data.image === "string"
+      ? data.image.trim()
+      : "";
+
+
+  return image || null;
 
 }
 
 
 /**
- * Save the homepage hero photo.
+ * Save homepage hero photo.
  */
-async function fsSaveHeroImage(imageUrl){
+async function fsSaveHeroImage(
+  imageUrl
+) {
 
   const fb =
     await waitForFirebase();
 
 
-  if(!fb?.db){
+  if (!fb?.db) {
 
     throw new Error(
       "Firebase is not available."
@@ -741,7 +807,7 @@ async function fsSaveHeroImage(imageUrl){
   }
 
 
-  if(!imageUrl){
+  if (!imageUrl) {
 
     throw new Error(
       "Image URL is required."
@@ -750,32 +816,11 @@ async function fsSaveHeroImage(imageUrl){
   }
 
 
-  let parsedUrl;
-
-
-  try{
-
-    parsedUrl =
-      new URL(
-        String(imageUrl).trim()
-      );
-
-  }catch{
-
-    throw new Error(
+  const parsedUrl =
+    validateHttpsUrl(
+      imageUrl,
       "The Cloudinary image URL is invalid."
     );
-
-  }
-
-
-  if(parsedUrl.protocol !== "https:"){
-
-    throw new Error(
-      "Only secure HTTPS image URLs are allowed."
-    );
-
-  }
 
 
   await fb.setDoc(
@@ -797,9 +842,7 @@ async function fsSaveHeroImage(imageUrl){
     },
 
     {
-
       merge: true
-
     }
 
   );
@@ -816,29 +859,109 @@ async function fsSaveHeroImage(imageUrl){
    Firestore:
 
    gallery/
-      {autoId}   {
-        image: "https://res.cloudinary.com/...",   <- the thumbnail photo
-        postUrl: "https://www.instagram.com/p/...", <- the actual IG post
+      {documentId} {
+        image: "https://res.cloudinary.com/...",
+        postUrl: "https://www.instagram.com/p/ABC123/",
         order: 0,
         updatedAt: "..."
       }
-
-   Each gallery tile shows a photo you upload AND links out to the
-   specific Instagram post you made for it — so a click opens that
-   exact post, not just your profile.
    =================================================== */
 
 
 /**
- * Load all gallery photos, ordered for display.
+ * Validate Instagram post URL.
  */
-async function fsListGalleryImages(){
+function validateInstagramPostUrl(
+  postUrl
+) {
+
+  const value =
+    String(postUrl || "").trim();
+
+
+  if (!value) {
+
+    throw new Error(
+      "Instagram post URL is required."
+    );
+
+  }
+
+
+  let parsedUrl;
+
+
+  try {
+
+    parsedUrl =
+      new URL(value);
+
+  } catch {
+
+    throw new Error(
+      "Enter a valid Instagram post URL."
+    );
+
+  }
+
+
+  const hostname =
+    parsedUrl.hostname
+      .toLowerCase()
+      .replace(/^www\./, "");
+
+
+  if (
+    hostname !== "instagram.com"
+  ) {
+
+    throw new Error(
+      "Enter a valid Instagram URL."
+    );
+
+  }
+
+
+  /*
+   * Accepts:
+   *
+   * https://www.instagram.com/p/ABC123/
+   * https://instagram.com/p/ABC123/
+   *
+   * Also allows /reel/ and /tv/.
+   */
+  const validPath =
+    /^\/(p|reel|tv)\/[^/?#]+/i.test(
+      parsedUrl.pathname
+    );
+
+
+  if (!validPath) {
+
+    throw new Error(
+      "Enter a valid Instagram post, reel, or video URL."
+    );
+
+  }
+
+
+  return parsedUrl.href;
+
+}
+
+
+/**
+ * Load all gallery photos.
+ *
+ * Gallery items are ordered by the "order" field.
+ */
+async function fsListGalleryImages() {
 
   const fb =
     await waitForFirebase();
 
 
-  if(!fb?.db){
+  if (!fb?.db) {
 
     throw new Error(
       "Firebase is not available."
@@ -847,15 +970,23 @@ async function fsListGalleryImages(){
   }
 
 
+  const galleryRef =
+    fb.collection(
+      fb.db,
+      "gallery"
+    );
+
+
+  const orderedQuery =
+    fb.query(
+      galleryRef,
+      fb.orderBy("order")
+    );
+
+
   const snapshot =
     await fb.getDocs(
-      fb.query(
-        fb.collection(
-          fb.db,
-          "gallery"
-        ),
-        fb.orderBy("order")
-      )
+      orderedQuery
     );
 
 
@@ -881,21 +1012,25 @@ async function fsListGalleryImages(){
 
 
 /**
- * Save (create or update) a gallery photo.
+ * Save or update a gallery photo.
  *
- * @param {string} id        Firestore doc id for this tile
- * @param {string} imageUrl  Cloudinary thumbnail image URL
- * @param {string} postUrl   The Instagram post this tile links to
- *                           (e.g. https://www.instagram.com/p/ABC123/)
- * @param {number} order     Display order (0-based)
+ * @param {string} id
+ * @param {string} imageUrl
+ * @param {string} postUrl
+ * @param {number} order
  */
-async function fsSaveGalleryImage(id, imageUrl, postUrl, order){
+async function fsSaveGalleryImage(
+  id,
+  imageUrl,
+  postUrl,
+  order
+) {
 
   const fb =
     await waitForFirebase();
 
 
-  if(!fb?.db){
+  if (!fb?.db) {
 
     throw new Error(
       "Firebase is not available."
@@ -904,7 +1039,7 @@ async function fsSaveGalleryImage(id, imageUrl, postUrl, order){
   }
 
 
-  if(!id){
+  if (!id) {
 
     throw new Error(
       "Gallery photo ID is required."
@@ -913,7 +1048,7 @@ async function fsSaveGalleryImage(id, imageUrl, postUrl, order){
   }
 
 
-  if(!imageUrl){
+  if (!imageUrl) {
 
     throw new Error(
       "Image URL is required."
@@ -922,48 +1057,48 @@ async function fsSaveGalleryImage(id, imageUrl, postUrl, order){
   }
 
 
-  const cleanPostUrl =
-    String(postUrl || "").trim();
+  const galleryId =
+    String(id).trim();
 
 
-  if(
-    !cleanPostUrl ||
-    !/^https:\/\/(www\.)?instagram\.com\//i.test(cleanPostUrl)
-  ){
+  if (!galleryId) {
 
     throw new Error(
-      "Enter a valid Instagram post URL (e.g. https://www.instagram.com/p/ABC123/)."
+      "Gallery photo ID is required."
     );
 
   }
 
 
-  let parsedUrl;
-
-
-  try{
-
-    parsedUrl =
-      new URL(
-        String(imageUrl).trim()
-      );
-
-  }catch{
-
-    throw new Error(
+  const parsedImageUrl =
+    validateHttpsUrl(
+      imageUrl,
       "The Cloudinary image URL is invalid."
     );
 
-  }
 
-
-  if(parsedUrl.protocol !== "https:"){
-
-    throw new Error(
-      "Only secure HTTPS image URLs are allowed."
+  const cleanPostUrl =
+    validateInstagramPostUrl(
+      postUrl
     );
 
+
+  let displayOrder =
+    Number(order);
+
+
+  if (!Number.isFinite(displayOrder)) {
+
+    displayOrder = 0;
+
   }
+
+
+  displayOrder =
+    Math.max(
+      0,
+      Math.floor(displayOrder)
+    );
 
 
   await fb.setDoc(
@@ -971,19 +1106,19 @@ async function fsSaveGalleryImage(id, imageUrl, postUrl, order){
     fb.doc(
       fb.db,
       "gallery",
-      String(id)
+      galleryId
     ),
 
     {
 
       image:
-        parsedUrl.href,
+        parsedImageUrl.href,
 
       postUrl:
         cleanPostUrl,
 
       order:
-        Number(order) || 0,
+        displayOrder,
 
       updatedAt:
         new Date().toISOString()
@@ -991,29 +1126,29 @@ async function fsSaveGalleryImage(id, imageUrl, postUrl, order){
     },
 
     {
-
       merge: true
-
     }
 
   );
 
 
-  return parsedUrl.href;
+  return parsedImageUrl.href;
 
 }
 
 
 /**
- * Delete a gallery photo record.
+ * Delete gallery photo record.
  */
-async function fsDeleteGalleryImage(id){
+async function fsDeleteGalleryImage(
+  id
+) {
 
   const fb =
     await waitForFirebase();
 
 
-  if(!fb?.db){
+  if (!fb?.db) {
 
     throw new Error(
       "Firebase is not available."
@@ -1022,7 +1157,7 @@ async function fsDeleteGalleryImage(id){
   }
 
 
-  if(!id){
+  if (!id) {
 
     throw new Error(
       "Gallery photo ID is required."
@@ -1036,7 +1171,7 @@ async function fsDeleteGalleryImage(id){
     fb.doc(
       fb.db,
       "gallery",
-      String(id)
+      String(id).trim()
     )
 
   );
@@ -1050,75 +1185,95 @@ async function fsDeleteGalleryImage(id){
    Firestore:
 
    orders/
-      {orderCode}   { phone, status, placedOn, itemsSummary, total }
+      {orderCode} {
+        phone,
+        status,
+        placedOn,
+        itemsSummary,
+        total
+      }
+        =================================================== */
 
-   SECURITY NOTE: order documents are keyed by their order code, and
-   this looks up a single document directly by that ID (a Firestore
-   "get") rather than listing the whole "orders" collection. This
-   matters — the Firestore rules only allow public "get" on this
-   collection, not "list", specifically so a visitor can retrieve
-   the one order they already have the code for, but can never
-   enumerate every customer's name, phone number and address by
-   listing the collection. Do not change this back to a
-   collection-wide getDocs() scan without also relaxing "list" in
-   firestore.rules, which would leak every order to any visitor.
+async function fsLookupOrder(
+  orderCode,
+  phone
+) {
 
-   NOTE: checkout.html does not yet write completed orders
-   to Firestore — this is ready for when it does. Until
-   then, every lookup returns null and track-order.html
-   falls back to its WhatsApp prompt, which is expected.
-   =================================================== */
-
-
-/**
- * Look up an order by its code and the phone number used
- * on it. Returns null if not found, if Firebase isn't
- * configured, if the order doesn't exist, or if the phone
- * number doesn't match the one on file — callers should
- * treat null as "not found" rather than as an error.
- */
-async function fsLookupOrder(orderCode, phone){
-
-  try{
+  try {
 
     const fb =
       await waitForFirebase();
 
 
-    if(!fb?.db || !orderCode){
+    if (
+      !fb?.db ||
+      !orderCode
+    ) {
+
       return null;
+
     }
 
 
-    if(typeof fb.getDoc !== "function"){
+    if (
+      typeof fb.getDoc !== "function"
+    ) {
 
       console.warn(
-        "COZY-LUXE: getDoc() is unavailable — check js/firebase-init.js imports getDoc."
+        "COZY-LUXE: getDoc() is unavailable. Check firebase-init.js."
       );
 
       return null;
 
     }
+
+
+    const cleanOrderCode =
+      String(orderCode).trim();
+
+
+    if (!cleanOrderCode) {
+
+      return null;
+
+    }
+
+
+    const orderRef =
+      fb.doc(
+        fb.db,
+        "orders",
+        cleanOrderCode
+      );
 
 
     const docSnap =
       await fb.getDoc(
-        fb.doc(
-          fb.db,
-          "orders",
-          String(orderCode).trim()
-        )
+        orderRef
       );
 
 
-    if(!docSnap.exists()){
+    if (!docSnap.exists()) {
+
       return null;
+
     }
 
 
     const data =
       docSnap.data() || {};
 
+
+    /*
+     * Normalize phone numbers.
+     *
+     * Example:
+     *
+     * 08012345678
+     * +2348012345678
+     *
+     * Both can be compared using the last 10 digits.
+     */
 
     const normalisedPhone =
       String(phone || "")
@@ -1130,24 +1285,100 @@ async function fsLookupOrder(orderCode, phone){
         .replace(/\D/g, "");
 
 
-    const phoneMatches =
-      !normalisedPhone ||
-      dataPhone.endsWith(
-        normalisedPhone.slice(-10)
-      );
+    /*
+     * If no phone was supplied, do not expose
+     * the order.
+     */
+    if (!normalisedPhone) {
 
-
-    if(!phoneMatches){
       return null;
+
     }
 
 
-    return data;
+    const lookupLast10 =
+      normalisedPhone.slice(-10);
 
-  }catch(error){
+
+    const storedLast10 =
+      dataPhone.slice(-10);
+
+
+    const phoneMatches =
+      lookupLast10.length === 10 &&
+      storedLast10.length === 10 &&
+      lookupLast10 === storedLast10;
+
+
+    if (!phoneMatches) {
+
+      return null;
+
+    }
+
+
+    return {
+
+      id: docSnap.id,
+
+      ...data
+
+    };
+
+  } catch (error) {
+
+    /*
+     * Deliberately return null.
+
+     * The track-order page should treat permission
+     * failures / missing documents as "not found"
+     * rather than exposing Firestore internals.
+     */
+
+    console.warn(
+      "COZY-LUXE: Order lookup failed.",
+      error
+    );
 
     return null;
 
   }
 
 }
+
+
+/* ===================================================
+   OPTIONAL GLOBAL EXPORT
+   ---------------------------------------------------
+   These functions are already global because this is
+   a normal script rather than a module.
+
+   The explicit object below makes debugging easier.
+   =================================================== */
+
+window.COZY_LUXE_FIRESTORE = {
+
+  waitForFirebase,
+
+  fsListProducts,
+  fsSaveProduct,
+  fsDeleteProduct,
+
+  fsSetBestSeller,
+
+  fsListCategoryImages,
+  fsSaveCategoryImage,
+  fsDeleteCategoryImage,
+
+  fsGetHeroImage,
+  fsSaveHeroImage,
+
+  fsListGalleryImages,
+  fsSaveGalleryImage,
+  fsDeleteGalleryImage,
+
+  fsLookupOrder,
+
+  initProducts
+
+};

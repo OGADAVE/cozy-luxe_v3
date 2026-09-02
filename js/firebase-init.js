@@ -1,34 +1,143 @@
 /* ===================================================
-   COZY-LUXE — Firebase init
-   This is an ES module (loaded via <script type="module">), so it can
-   import the Firebase SDK straight from Google's CDN with no build step.
-   It exposes what it initializes on window.fb so the rest of the site
-   (plain, non-module scripts) can use it, and fires a "firebase-ready"
-   event once that's done — see js/products-service.js for the consumer
-   side of that handshake.
-   =================================================== */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import {
-  getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut
-} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-import {
-  getFirestore, collection, getDocs, getDoc, doc, setDoc, updateDoc, deleteDoc, query, orderBy
-} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
-import { FIREBASE_CONFIG, ADMIN_EMAILS } from "./firebase-config.js";
+   COZY-LUXE — Firebase Initialization
+   ---------------------------------------------------
+   ES module loaded directly from Google's CDN.
 
-let app = null, auth = null, db = null;
-try{
+   Responsibilities:
+   • Initialize Firebase
+   • Initialize Firebase Authentication
+   • Initialize Firestore
+   • Expose Firebase functions through window.fb
+   • Notify normal scripts when Firebase is ready
+   =================================================== */
+
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  getDoc,
+  doc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  orderBy
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+import {
+  FIREBASE_CONFIG,
+  ADMIN_EMAILS
+} from "./firebase-config.js";
+
+
+/* ===================================================
+   FIREBASE INSTANCES
+   =================================================== */
+
+let app = null;
+let auth = null;
+let db = null;
+
+
+/* ===================================================
+   INITIALIZE FIREBASE
+   =================================================== */
+
+try {
+
   app = initializeApp(FIREBASE_CONFIG);
+
   auth = getAuth(app);
+
   db = getFirestore(app);
-}catch(e){
-  console.warn("COZY-LUXE: Firebase failed to initialize — falling back to the built-in catalog.", e);
+
+  console.info(
+    "COZY-LUXE: Firebase initialized successfully."
+  );
+
+} catch (error) {
+
+  console.error(
+    "COZY-LUXE: Firebase failed to initialize.",
+    error
+  );
+
 }
 
+
 window.fb = {
-  app, auth, db,
-  ADMIN_EMAILS,
-  collection, getDocs, getDoc, doc, setDoc, updateDoc, deleteDoc, query, orderBy,
-  onAuthStateChanged, signInWithEmailAndPassword, signOut
+
+  /* Firebase instances */
+  app,
+  auth,
+  db,
+
+  /* Admin configuration */
+  ADMIN_EMAILS: Array.isArray(ADMIN_EMAILS)
+    ? ADMIN_EMAILS
+        .map(email => String(email).trim().toLowerCase())
+        .filter(Boolean)
+    : [],
+
+  /* Firestore */
+  collection,
+  getDocs,
+  getDoc,
+  doc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  orderBy,
+
+  /* Authentication */
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut
+
 };
-window.dispatchEvent(new Event("firebase-ready"));
+
+
+/* ===================================================
+   FIREBASE READY EVENT
+   ---------------------------------------------------
+   products-service.js waits for this event when
+   Firebase has not finished loading yet.
+   =================================================== */
+
+window.dispatchEvent(
+  new Event("firebase-ready")
+);
+
+
+/* ===================================================
+   OPTIONAL GLOBAL STATUS FLAG
+   =================================================== */
+
+window.COZY_LUXE_FIREBASE_READY = Boolean(db);
+
+
+/* ===================================================
+   LOG STATUS
+   =================================================== */
+
+if (!db) {
+
+  console.warn(
+    "COZY-LUXE: Firebase is unavailable. " +
+    "The storefront can continue using the static catalog, " +
+    "but Firestore-powered features will not work."
+  );
+
+}
