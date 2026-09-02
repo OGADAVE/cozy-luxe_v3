@@ -1052,6 +1052,17 @@ async function fsDeleteGalleryImage(id){
    orders/
       {orderCode}   { phone, status, placedOn, itemsSummary, total }
 
+   SECURITY NOTE: order documents are keyed by their order code, and
+   this looks up a single document directly by that ID (a Firestore
+   "get") rather than listing the whole "orders" collection. This
+   matters — the Firestore rules only allow public "get" on this
+   collection, not "list", specifically so a visitor can retrieve
+   the one order they already have the code for, but can never
+   enumerate every customer's name, phone number and address by
+   listing the collection. Do not change this back to a
+   collection-wide getDocs() scan without also relaxing "list" in
+   firestore.rules, which would leak every order to any visitor.
+
    NOTE: checkout.html does not yet write completed orders
    to Firestore — this is ready for when it does. Until
    then, every lookup returns null and track-order.html
@@ -1062,9 +1073,9 @@ async function fsDeleteGalleryImage(id){
 /**
  * Look up an order by its code and the phone number used
  * on it. Returns null if not found, if Firebase isn't
- * configured, or if the "orders" collection doesn't exist
- * yet — callers should treat null as "not found" rather
- * than as an error.
+ * configured, if the order doesn't exist, or if the phone
+ * number doesn't match the one on file — callers should
+ * treat null as "not found" rather than as an error.
  */
 async function fsLookupOrder(orderCode, phone){
 
@@ -1079,13 +1090,34 @@ async function fsLookupOrder(orderCode, phone){
     }
 
 
-    const snapshot =
-      await fb.getDocs(
-        fb.collection(
+    if(typeof fb.getDoc !== "function"){
+
+      console.warn(
+        "COZY-LUXE: getDoc() is unavailable — check js/firebase-init.js imports getDoc."
+      );
+
+      return null;
+
+    }
+
+
+    const docSnap =
+      await fb.getDoc(
+        fb.doc(
           fb.db,
-          "orders"
+          "orders",
+          String(orderCode).trim()
         )
       );
+
+
+    if(!docSnap.exists()){
+      return null;
+    }
+
+
+    const data =
+      docSnap.data() || {};
 
 
     const normalisedPhone =
@@ -1093,36 +1125,24 @@ async function fsLookupOrder(orderCode, phone){
         .replace(/\D/g, "");
 
 
-    let found = null;
+    const dataPhone =
+      String(data.phone || "")
+        .replace(/\D/g, "");
 
 
-    snapshot.forEach(docSnap => {
-
-      const data =
-        docSnap.data() || {};
-
-      const codeMatches =
-        docSnap.id === orderCode ||
-        data.orderCode === orderCode;
-
-      const dataPhone =
-        String(data.phone || "")
-          .replace(/\D/g, "");
-
-      const phoneMatches =
-        !normalisedPhone ||
-        dataPhone.endsWith(
-          normalisedPhone.slice(-10)
-        );
-
-      if(codeMatches && phoneMatches){
-        found = data;
-      }
-
-    });
+    const phoneMatches =
+      !normalisedPhone ||
+      dataPhone.endsWith(
+        normalisedPhone.slice(-10)
+      );
 
 
-    return found;
+    if(!phoneMatches){
+      return null;
+    }
+
+
+    return data;
 
   }catch(error){
 

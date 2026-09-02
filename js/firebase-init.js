@@ -12,7 +12,7 @@ import {
   getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 import {
-  getFirestore, collection, getDocs, doc, setDoc, updateDoc, deleteDoc, query, orderBy
+  getFirestore, collection, getDocs, getDoc, doc, setDoc, updateDoc, deleteDoc, query, orderBy
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import { FIREBASE_CONFIG, ADMIN_EMAILS } from "./firebase-config.js";
 
@@ -28,7 +28,7 @@ try{
 window.fb = {
   app, auth, db,
   ADMIN_EMAILS,
-  collection, getDocs, doc, setDoc, updateDoc, deleteDoc, query, orderBy,
+  collection, getDocs, getDoc, doc, setDoc, updateDoc, deleteDoc, query, orderBy,
   onAuthStateChanged, signInWithEmailAndPassword, signOut
 };
 window.dispatchEvent(new Event("firebase-ready"));
